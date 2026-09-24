@@ -85,3 +85,18 @@ background:linear-gradient(145deg,rgba(184,116,132,.18),rgba(255,255,255,.018))!
 border-color:rgba(226,170,183,.52)!important
 }
 html body main .score-demo>div:last-child strong{color:#e2aab7!important}
+
+/* v6 — réponses du quiz : contraste lisible */
+html body main .answer-btn,
+html body main button.answer-btn{
+background:#d7a8b3!important;
+color:#171012!important;
+font-weight:600!important;
+border-color:#d7a8b3!important
+}
+html body main .answer-btn:hover,
+html body main button.answer-btn:hover{
+background:#e3bbc4!important;
+color:#171012!important;
+border-color:#e3bbc4!important
+}
