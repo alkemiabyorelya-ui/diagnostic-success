@@ -64,6 +64,19 @@ function renderResults(scores,top3){
  <div class="scores-grid">${dimensions.map(d=>`<div class="score-card ${top3.some(p=>p.key===d.key)?"score-card--priority":""}"><span>${d.label}</span><strong>${scores[d.key]} %</strong>${top3.some(p=>p.key===d.key)?'<em>À travailler en priorité</em>':""}</div>`).join("")}</div>
  <h2>VOICI LES 3 ENDROITS OÙ TON BUSINESS TE DEMANDE AUJOURD’HUI DE SHIFTER.</h2>
  <div class="priority-list">${top3.map((d,idx)=>`<article class="result-card"><div class="score-badge">#${idx+1} — ${d.label} · ${scores[d.key]} %</div><h3>${d.result.title}</h3><p>${d.result.body}</p><h4>Ce qui peut se jouer derrière</h4><p>${d.result.behind}</p><h4>Quand cette dimension se libère</h4><p>${d.result.liberated}</p></article>`).join("")}</div>
+ <section class="about-aurelia">
+   <div class="about-copy">
+     <div class="eyebrow">JE SUIS AURÉLIA</div>
+     <h2>Et si on construisait les business complètement à l’envers ?</h2>
+     <p>Quand on crée son entreprise, le premier réflexe, c’est souvent de prendre une formation business. On apprend à construire une offre, définir une stratégie, communiquer, vendre, créer du contenu…</p>
+     <p><strong>Mais on oublie généralement de commencer par la base : devenir l’entrepreneure capable de porter tout ça.</strong></p>
+     <p>Alors on essaie d’appliquer des stratégies avec une identité qui, elle, n’est pas encore à l’aise avec le fait de se montrer, vendre, recevoir davantage d’argent, prendre des décisions, poser des limites ou voir beaucoup plus grand.</p>
+     <p>Et forcément, ça pousse. Ça force. On essaie de faire rentrer la stratégie dans une identité qui n’est pas encore prête à la soutenir.</p>
+     <p><strong>Pour moi, l’ordre devrait être exactement l’inverse.</strong></p>
+     <p>On travaille d’abord sur ton identité d’entrepreneure : ce que tu t’autorises à faire, à recevoir, à montrer, à assumer et à devenir. Et ensuite, la stratégie arrête d’être quelque chose que tu dois te forcer à appliquer. Elle devient beaucoup plus naturelle, fluide et cohérente avec qui tu es.</p>
+     <p>C’est précisément pour ça que j’ai créé ALKÉMIA et que je travaille aujourd’hui sur la <strong>reprogrammation neuro-identitaire</strong>.</p>
+   </div>
+ </section>
  <div class="offers">
    <article class="offer-card primary"><div class="eyebrow">SUCCESS</div><h2>Ton business ne pourra pas aller plus loin que l’identité avec laquelle tu essaies de le construire.</h2><p>SUCCESS sera un accompagnement entièrement consacré à <strong>ton identité entrepreneuriale</strong>. SUCCESS n’est pas encore ouvert, mais tu peux t’inscrire dès maintenant sur la liste prioritaire.</p><button id="success-btn">JE M’INSCRIS SUR LA LISTE PRIORITAIRE SUCCESS →</button></article>
    <article class="offer-card"><div class="eyebrow">LES CODES D’ALKÉMIA</div><h3>Tu veux commencer seule sur une énergie précise ?</h3><p>Tu peux commencer à travailler directement sur l’énergie zodiacale qui correspond à ce que ton diagnostic vient de mettre en lumière.</p><a class="cta" href="https://lescodesdalkemia.netlify.app/" target="_blank" rel="noopener">DÉCOUVRIR LES CODES D’ALKÉMIA →</a></article>
