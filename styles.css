@@ -1,4 +1,4 @@
-:root{--bg:#090909;--panel:#121212;--panel2:#171717;--text:#f4efe8;--muted:#b9b0a7;--gold:#c9a56a;--line:#2b2927;--white:#fff}
+:root{--bg:#090909;--panel:#121212;--panel2:#171717;--text:#e8cfd2;--muted:#c9aeb2;--gold:#c9a56a;--line:#2b2927;--white:#fff}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at top,#17120e 0,#090909 30%,#090909 100%);color:var(--text);font-family:Montserrat,Arial,sans-serif}
 body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(circle at 20% 20%,rgba(201,165,106,.08) 0 1px,transparent 1px),radial-gradient(circle at 80% 30%,rgba(255,255,255,.035) 0 1px,transparent 1px);background-size:80px 80px,120px 120px}
 .shell,.quiz-shell{width:min(100% - 32px,980px);margin:auto}.hero{padding:72px 0 96px}.eyebrow,.dimension{font-size:.78rem;letter-spacing:.22em;color:var(--gold);font-weight:700;text-transform:uppercase}
@@ -11,3 +11,17 @@ p{font-size:1.05rem;line-height:1.8;color:var(--muted)}strong{color:var(--text)}
 .quiz-shell{padding:60px 0 90px}.quiz-topbar{margin-bottom:26px;color:var(--muted);font-size:.88rem}.progress{height:8px;background:#222;border-radius:99px;overflow:hidden;margin-top:10px}.progress span{display:block;height:100%;width:0;background:var(--gold);transition:width .2s}.quiz-card h2{margin-top:12px}.answers{display:grid;gap:12px;margin-top:28px}.answer-btn{background:#111;border:1px solid #34302c;color:var(--text);padding:16px 18px;border-radius:14px;text-align:left;font:inherit;transition:.15s}.answer-btn:hover{border-color:var(--gold);transform:translateY(-1px)}
 .results-head{padding-top:74px}.scores-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:28px 0 40px}.score-card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px}.score-card span{display:block;color:var(--muted);font-size:.74rem;letter-spacing:.09em}.score-card strong{display:block;font-family:"Cormorant Garamond",serif;font-size:2.2rem;margin-top:6px}.priority-list{display:grid;gap:20px}.result-card h3{margin-bottom:8px}.result-card .score-badge{color:var(--gold);font-weight:800}.result-card h4{margin:22px 0 6px;font-size:.95rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em}.offers{margin:54px 0 90px}.offer-card.primary{border-color:rgba(201,165,106,.5)}
 @media(max-width:700px){.hero{padding-top:44px}.score-demo,.scores-grid{grid-template-columns:1fr}.callout,.intro-card,.form-card,.quiz-card,.result-card,.offer-card{padding:21px;border-radius:18px}p{font-size:1rem}.quiz-shell{padding-top:34px}}
+/* ALKÉMIA — féminisation éditoriale */
+body{color:var(--text)}
+h1,h2,h3{color:#efd7da;font-weight:600}
+.hero h2,.results-head h1 + p strong{font-style:italic;color:#d8b7bc}
+p{color:#c9aeb2}
+strong{color:#efd7da}
+.callout p,.intro-card p,.offer-card p,.result-card p{color:#c9aeb2}
+.quiz-card h2{color:#efd7da}
+.answer-btn{color:#e8cfd2}
+.score-card strong,.score-demo strong{color:#efd7da}
+.form-card input[type="text"],.form-card input[type="email"]{color:#efd7da}
+.cta,button{font-family:Montserrat,Arial,sans-serif}
+.eyebrow,.dimension,.score-demo span,.result-card h4{color:#c9a56a}
+.hero>p:first-of-type,.intro-card p:first-of-type{font-family:"Cormorant Garamond",serif;font-size:1.28rem}
