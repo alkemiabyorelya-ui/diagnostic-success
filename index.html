@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diagnostic SUCCESS — ALKÉMIA</title>
+  <meta name="description" content="Découvre les dimensions de ton identité entrepreneuriale qui freinent aujourd’hui la croissance de ton business." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main>
+    <section class="hero shell">
+      <div class="eyebrow">DIAGNOSTIC GRATUIT</div>
+      <h1>TU SAIS CE QUE TU DEVRAIS FAIRE POUR FAIRE GRANDIR TON BUSINESS.</h1>
+      <h2>Alors pourquoi tu ne le fais pas ?</h2>
+      <p>Tu sais qu’il faudrait te montrer davantage, parler de ton offre, assumer tes prix, créer du contenu, vendre, prendre ta place, voir plus grand…</p>
+      <p><strong>Tu sais.</strong></p>
+      <p>Et pourtant, il y a des endroits où tu bloques encore.</p>
+      <div class="callout">
+        <p class="callout-kicker">ET SI TON BUSINESS N’AVAIT PAS BESOIN D’UNE NOUVELLE STRATÉGIE ?</p>
+        <p><strong>Mais de shifter l’identité qui t’empêche encore de vendre, de te montrer, de recevoir plus et de prendre ta place ?</strong></p>
+      </div>
+      <p>Parce que ton business ne te demande pas seulement de savoir <strong>quoi faire</strong>. Il te demande d’oser, de recevoir, de communiquer, de faire confiance à ton intuition, d’être visible, d’assumer ton expertise, de créer des relations sans t’oublier, d’assumer ta puissance, d’avoir une vision, de diriger, d’impacter et de créer.</p>
+
+      <div class="score-demo">
+        <div><span>VISION</span><strong>92 %</strong><small>Tu sais exactement où tu veux aller.</small></div>
+        <div><span>AUDACE</span><strong>34 %</strong><small>Mais tu n’oses pas toujours faire ce qu’il faudrait pour y aller.</small></div>
+      </div>
+
+      <div class="intro-card">
+        <h3>QU’EST-CE QUI FREINE RÉELLEMENT TON BUSINESS AUJOURD’HUI ?</h3>
+        <p>À travers une série de questions très concrètes sur ton business, tu vas découvrir où tu en es en matière d’<strong>audace, de prospérité, de communication, d’intuition, de visibilité, d’expertise, de relation, de puissance, de vision, de leadership, d’impact et de créativité.</strong></p>
+        <p>Et surtout, tu découvriras <strong>les 3 dimensions qui créent aujourd’hui le plus gros plafond dans ton business.</strong></p>
+      </div>
+
+      <form name="diagnostic-success" method="POST" data-netlify="true" netlify-honeypot="bot-field" id="lead-form" class="form-card">
+        <input type="hidden" name="form-name" value="diagnostic-success">
+        <p class="hidden"><label>Ne pas remplir : <input name="bot-field"></label></p>
+        <label>Prénom<input type="text" name="prenom" required></label>
+        <label>E-mail<input type="email" name="email" required></label>
+        <label class="consent"><input type="checkbox" name="consent_marketing" value="oui" required><span>J’accepte de recevoir les e-mails liés à ce diagnostic et aux offres ALKÉMIA. Je pourrai me désinscrire à tout moment.</span></label>
+        <button type="submit">JE FAIS MON DIAGNOSTIC →</button>
+      </form>
+    </section>
+
+    <section id="quiz" class="quiz-shell hidden">
+      <div class="quiz-topbar">
+        <span id="progress-label">Question 1 sur 60</span>
+        <div class="progress"><span id="progress-bar"></span></div>
+      </div>
+      <div class="quiz-card">
+        <div class="dimension" id="dimension-label"></div>
+        <h2 id="question-text"></h2>
+        <div id="answers" class="answers"></div>
+      </div>
+    </section>
+
+    <section id="results" class="shell hidden"></section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
