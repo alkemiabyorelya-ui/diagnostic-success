@@ -93,10 +93,18 @@ function renderResults(scores,top3){
      <p>C’est précisément pour ça que j’ai créé ALKÉMIA et que je travaille aujourd’hui sur la <strong>reprogrammation neuro-identitaire</strong>.</p>
    </div>
  </section>
+ <section class="offers-transition">
+   <div class="eyebrow">ET MAINTENANT ?</div>
+   <h2>OK. ET MAINTENANT, TU FAIS QUOI DE TES RÉSULTATS ?</h2>
+   <p>Ton diagnostic vient de te montrer <strong>où ton identité d’entrepreneure soutient déjà ton business… et où elle lui met encore le pied sur le frein.</strong></p>
+   <p>Maintenant, l’idée n’est évidemment pas de refermer cette page en te disant : « Ah oui, effectivement, j’ai un problème avec ma visibilité. » 😅</p>
+   <p><strong>L’idée, c’est de travailler dessus.</strong></p>
+   <p>Et selon ce que tu veux transformer aujourd’hui, je peux t’accompagner de trois façons différentes.</p>
+ </section>
  <div class="offers">
-   <article class="offer-card primary"><div class="eyebrow">SUCCESS</div><h2>Ton business ne pourra pas aller plus loin que l’identité avec laquelle tu essaies de le construire.</h2><p>SUCCESS sera un accompagnement entièrement consacré à <strong>ton identité entrepreneuriale</strong>. SUCCESS n’est pas encore ouvert, mais tu peux t’inscrire dès maintenant sur la liste prioritaire.</p><button id="success-btn">JE M’INSCRIS SUR LA LISTE PRIORITAIRE SUCCESS →</button></article>
-   <article class="offer-card"><div class="eyebrow">LES CODES D’ALKÉMIA</div><h3>Tu veux commencer seule sur une énergie précise ?</h3><p>Tu peux commencer à travailler directement sur l’énergie zodiacale qui correspond à ce que ton diagnostic vient de mettre en lumière.</p><a class="cta" href="https://lescodesdalkemia.netlify.app/" target="_blank" rel="noopener">DÉCOUVRIR LES CODES D’ALKÉMIA →</a></article>
-   <article class="offer-card"><div class="eyebrow">ORIGINE</div><h3>Tu sens que ce qui se joue dépasse largement ton business ?</h3><p>ORIGINE est mon accompagnement individuel pour aller travailler en profondeur sur tes programmes inconscients, à partir de ta propre carte du ciel. Ici, on travaille sur toi à 360°.</p><a class="cta" href="https://alkemia.netlify.app/origine" target="_blank" rel="noopener">DÉCOUVRIR ORIGINE →</a></article>
+   <article class="offer-card primary"><div class="offer-for">TU VEUX TRAVAILLER SPÉCIFIQUEMENT SUR TON IDENTITÉ D’ENTREPRENEURE ET LES BLOCAGES QUI FREINENT TON BUSINESS ?</div><div class="eyebrow">SUCCESS</div><h2>Ton business ne pourra pas aller plus loin que l’identité avec laquelle tu essaies de le construire.</h2><p>SUCCESS sera un accompagnement entièrement consacré à <strong>ton identité entrepreneuriale</strong>. SUCCESS n’est pas encore ouvert, mais tu peux t’inscrire dès maintenant sur la liste prioritaire.</p><button id="success-btn">JE M’INSCRIS SUR LA LISTE PRIORITAIRE SUCCESS →</button></article>
+   <article class="offer-card"><div class="offer-for">TU VEUX COMMENCER SEULE PAR REPROGRAMMER UNE ÉNERGIE PRÉCISE ?</div><div class="eyebrow">LES CODES D’ALKÉMIA</div><h3>Tu veux commencer seule sur une énergie précise ?</h3><p>Tu peux commencer à travailler directement sur l’énergie zodiacale qui correspond à ce que ton diagnostic vient de mettre en lumière.</p><a class="cta" href="https://lescodesdalkemia.netlify.app/" target="_blank" rel="noopener">DÉCOUVRIR LES CODES D’ALKÉMIA →</a></article>
+   <article class="offer-card"><div class="offer-for">TU SENS QUE CE QUI SE JOUE DÉPASSE LARGEMENT TON BUSINESS ?</div><div class="eyebrow">ORIGINE</div><h3>Tu sens que ce qui se joue dépasse largement ton business ?</h3><p>ORIGINE est mon accompagnement individuel pour aller travailler en profondeur sur tes programmes inconscients, à partir de ta propre carte du ciel. Ici, on travaille sur toi à 360°.</p><a class="cta" href="https://alkemia.netlify.app/origine" target="_blank" rel="noopener">DÉCOUVRIR ORIGINE →</a></article>
  </div>`;
  document.getElementById("success-btn").addEventListener("click",joinSuccess);
 }
