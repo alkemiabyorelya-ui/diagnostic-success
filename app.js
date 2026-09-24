@@ -76,12 +76,16 @@ function renderResults(scores,top3){
  <h2>VOICI LES 3 ENDROITS OÙ TON BUSINESS TE DEMANDE AUJOURD’HUI DE SHIFTER.</h2>
  <div class="priority-list">${top3.map((d,idx)=>`<article class="result-card"><div class="score-badge">#${idx+1} — ${d.label} · ${scores[d.key]} %</div><h3>${d.result.title}</h3><p>${d.result.body}</p><h4>Ce qui peut se jouer derrière</h4><p>${d.result.behind}</p><h4>Quand cette dimension se libère</h4><p>${d.result.liberated}</p></article>`).join("")}</div>
  <section class="about-aurelia">
-   <div class="about-photo"><img src="/1000062207.png" alt="Aurélia, fondatrice d’ALKÉMIA"></div>
-   <div class="about-copy">
-     <div class="eyebrow">JE SUIS AURÉLIA</div>
-     <h2>Et si on construisait les business complètement à l’envers ?</h2>
-     <p>Quand on crée son entreprise, le premier réflexe, c’est souvent de prendre une formation business. On apprend à construire une offre, définir une stratégie, communiquer, vendre, créer du contenu…</p>
-     <p><strong>Mais on oublie généralement de commencer par la base : devenir l’entrepreneure capable de porter tout ça.</strong></p>
+   <div class="about-top">
+     <div class="about-photo"><img src="/1000062207.png" alt="Aurélia, fondatrice d’ALKÉMIA"></div>
+     <div class="about-copy about-copy--top">
+       <div class="eyebrow">JE SUIS AURÉLIA</div>
+       <h2>Et si on construisait les business complètement à l’envers ?</h2>
+       <p>Quand on crée son entreprise, le premier réflexe, c’est souvent de prendre une formation business. On apprend à construire une offre, définir une stratégie, communiquer, vendre, créer du contenu…</p>
+       <p><strong>Mais on oublie généralement de commencer par la base : devenir l’entrepreneure capable de porter tout ça.</strong></p>
+     </div>
+   </div>
+   <div class="about-copy about-copy--full">
      <p>Alors on essaie d’appliquer des stratégies avec une identité qui, elle, n’est pas encore à l’aise avec le fait de se montrer, vendre, recevoir davantage d’argent, prendre des décisions, poser des limites ou voir beaucoup plus grand.</p>
      <p>Et forcément, ça pousse. Ça force. On essaie de faire rentrer la stratégie dans une identité qui n’est pas encore prête à la soutenir.</p>
      <p><strong>Pour moi, l’ordre devrait être exactement l’inverse.</strong></p>
