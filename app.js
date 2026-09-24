@@ -76,6 +76,7 @@ function renderResults(scores,top3){
  <h2>VOICI LES 3 ENDROITS OÙ TON BUSINESS TE DEMANDE AUJOURD’HUI DE SHIFTER.</h2>
  <div class="priority-list">${top3.map((d,idx)=>`<article class="result-card"><div class="score-badge">#${idx+1} — ${d.label} · ${scores[d.key]} %</div><h3>${d.result.title}</h3><p>${d.result.body}</p><h4>Ce qui peut se jouer derrière</h4><p>${d.result.behind}</p><h4>Quand cette dimension se libère</h4><p>${d.result.liberated}</p></article>`).join("")}</div>
  <section class="about-aurelia">
+   <div class="about-photo"><img src="/1000062207.png" alt="Aurélia, fondatrice d’ALKÉMIA"></div>
    <div class="about-copy">
      <div class="eyebrow">JE SUIS AURÉLIA</div>
      <h2>Et si on construisait les business complètement à l’envers ?</h2>
