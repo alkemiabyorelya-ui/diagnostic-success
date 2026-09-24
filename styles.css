@@ -25,3 +25,22 @@ strong{color:#efd7da}
 .cta,button{font-family:Montserrat,Arial,sans-serif}
 .eyebrow,.dimension,.score-demo span,.result-card h4{color:#c9a56a}
 .hero>p:first-of-type,.intro-card p:first-of-type{font-family:"Cormorant Garamond",serif;font-size:1.28rem}
+
+/* v3 — ALKÉMIA visual identity: blush + feminine editorial hierarchy */
+html body main,html body main p,html body main small,html body main label,
+html body main .quiz-topbar,html body main .consent{color:#d9b9bf!important}
+html body main strong{color:#f0d5d9!important}
+html body main h1,html body main h2,html body main h3{color:#e9cbd0!important}
+html body main h1{font-family:"Cormorant Garamond",Georgia,serif!important;font-weight:500!important}
+html body main h2{font-family:"Cormorant Garamond",Georgia,serif!important;font-style:italic!important;font-weight:500!important;color:#dcbcc2!important}
+html body main h3{font-family:"Cormorant Garamond",Georgia,serif!important;font-weight:500!important}
+html body main .hero>p:first-of-type{font-family:"Cormorant Garamond",Georgia,serif!important;font-size:1.35rem!important;font-style:italic!important;color:#e0c2c7!important}
+html body main .eyebrow,html body main .dimension,html body main .callout-kicker,
+html body main .score-demo span,html body main .result-card h4{color:#c9a56a!important}
+html body main .callout{background:linear-gradient(135deg,rgba(217,185,191,.09),rgba(201,165,106,.035))!important;border-color:rgba(217,185,191,.28)!important}
+html body main .intro-card,html body main .form-card,html body main .quiz-card,
+html body main .result-card,html body main .offer-card{border-color:rgba(217,185,191,.18)!important}
+html body main .score-demo small,html body main .score-card span{color:#cbaeb4!important}
+html body main .score-demo strong,html body main .score-card strong{color:#efd2d7!important}
+html body main .answer-btn{color:#e3c5ca!important;border-color:rgba(217,185,191,.22)!important}
+html body main input[type="text"],html body main input[type="email"]{color:#efd2d7!important;border-color:rgba(217,185,191,.25)!important}
