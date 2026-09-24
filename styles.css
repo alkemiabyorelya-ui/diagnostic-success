@@ -66,3 +66,22 @@ html body main .quiz-topbar,html body main .answer-btn{
 font-family:Montserrat,Arial,sans-serif!important
 }
 html body main .hero>p:first-of-type{font-family:Montserrat,Arial,sans-serif!important;font-size:1.05rem!important;font-style:normal!important}
+
+/* v5 — mettre en scène le contraste Vision / Audace */
+html body main .score-demo{gap:22px!important;margin:44px 0!important}
+html body main .score-demo>div{
+position:relative!important;
+padding:30px 28px!important;
+background:linear-gradient(145deg,rgba(215,168,179,.13),rgba(255,255,255,.018))!important;
+border:1px solid rgba(215,168,179,.34)!important;
+box-shadow:0 18px 55px rgba(0,0,0,.32)!important
+}
+html body main .score-demo span{font-size:.9rem!important;letter-spacing:.2em!important}
+html body main .score-demo strong{font-size:4.4rem!important;line-height:.95!important;margin:12px 0!important}
+html body main .score-demo small{font-size:.92rem!important}
+html body main .score-demo>div:first-child strong{color:#f0d4da!important}
+html body main .score-demo>div:last-child{
+background:linear-gradient(145deg,rgba(184,116,132,.18),rgba(255,255,255,.018))!important;
+border-color:rgba(226,170,183,.52)!important
+}
+html body main .score-demo>div:last-child strong{color:#e2aab7!important}
