@@ -59,9 +59,9 @@ function renderResults(scores,top3){
  results.classList.remove("hidden");
  results.innerHTML=`
  <div class="results-head"><div class="eyebrow">TES RÉSULTATS</div><h1>TU VOIS LE PROBLÈME MAINTENANT ?</h1>
- <p><strong>Tu n’as peut-être jamais manqué de stratégie.</strong></p>
+ <p><strong>Tu n’as jamais manqué de stratégie.</strong></p>
  <p>Tu savais déjà qu’il fallait te montrer, vendre, parler de ton offre, assumer tes prix, prendre des décisions et arrêter de jouer petit. Le problème, c’est que savoir quoi faire n’a jamais suffi à être capable de le faire.</p></div>
- <div class="scores-grid">${dimensions.map(d=>`<div class="score-card"><span>${d.label}</span><strong>${scores[d.key]} %</strong></div>`).join("")}</div>
+ <div class="scores-grid">${dimensions.map(d=>`<div class="score-card ${top3.some(p=>p.key===d.key)?"score-card--priority":""}"><span>${d.label}</span><strong>${scores[d.key]} %</strong>${top3.some(p=>p.key===d.key)?'<em>À travailler en priorité</em>':""}</div>`).join("")}</div>
  <h2>VOICI LES 3 ENDROITS OÙ TON BUSINESS TE DEMANDE AUJOURD’HUI DE SHIFTER.</h2>
  <div class="priority-list">${top3.map((d,idx)=>`<article class="result-card"><div class="score-badge">#${idx+1} — ${d.label} · ${scores[d.key]} %</div><h3>${d.result.title}</h3><p>${d.result.body}</p><h4>Ce qui peut se jouer derrière</h4><p>${d.result.behind}</p><h4>Quand cette dimension se libère</h4><p>${d.result.liberated}</p></article>`).join("")}</div>
  <div class="offers">
