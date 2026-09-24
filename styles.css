@@ -44,3 +44,25 @@ html body main .score-demo small,html body main .score-card span{color:#cbaeb4!i
 html body main .score-demo strong,html body main .score-card strong{color:#efd2d7!important}
 html body main .answer-btn{color:#e3c5ca!important;border-color:rgba(217,185,191,.22)!important}
 html body main input[type="text"],html body main input[type="email"]{color:#efd2d7!important;border-color:rgba(217,185,191,.25)!important}
+
+/* v4 — rose monochrome, typographie simplifiée */
+:root{--gold:#d7a8b3!important;--text:#e8cbd1!important;--muted:#c79fa8!important;--line:#3a292e!important}
+html body main .eyebrow,html body main .dimension,html body main .callout-kicker,
+html body main .score-demo span,html body main .result-card h4,
+html body main .score-badge{color:#d7a8b3!important}
+html body main .progress span{background:#d7a8b3!important}
+html body main button,html body main .cta{background:#d7a8b3!important;color:#160f11!important}
+html body main .callout{background:linear-gradient(135deg,rgba(215,168,179,.10),rgba(239,205,212,.025))!important;border-color:rgba(215,168,179,.30)!important}
+html body main .offer-card.primary{border-color:rgba(215,168,179,.35)!important}
+html body main .answer-btn:hover{border-color:#d7a8b3!important}
+html body main h1,html body main h2,html body main h3,
+html body main .score-demo strong,html body main .score-card strong{
+font-family:"Cormorant Garamond",Georgia,serif!important
+}
+html body main h2{font-style:normal!important}
+html body main p,html body main small,html body main label,html body main button,
+html body main .cta,html body main .eyebrow,html body main .dimension,
+html body main .quiz-topbar,html body main .answer-btn{
+font-family:Montserrat,Arial,sans-serif!important
+}
+html body main .hero>p:first-of-type{font-family:Montserrat,Arial,sans-serif!important;font-size:1.05rem!important;font-style:normal!important}
