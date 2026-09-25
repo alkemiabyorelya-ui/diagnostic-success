@@ -217,7 +217,8 @@ function openPrintableReport(scores,top3){
      {text:"Découvrir les Codes d’ALKÉMIA →",link:"https://lescodesdalkemia.netlify.app/",style:"link",margin:[0,4,0,18]},
      {text:"ORIGINE",style:"offerTitle"},{text:"Pour aller plus loin que ton business et travailler en profondeur sur tes programmes inconscients.",style:"body"},
      {text:"Découvrir ORIGINE →",link:"https://alkemia.netlify.app/origine",style:"link",margin:[0,4,0,28]},
-     {text:"Aurélia · Experte en Reprogrammation Neuro-Identitaire · Fondatrice de la méthode ALKÉMIA",style:"footer"}
+     {text:"Aurélia · Experte en Reprogrammation Neuro-Identitaire · Fondatrice de la méthode ALKÉMIA",style:"footer",margin:[0,0,0,8]},
+     {text:[{text:"Instagram : @alkemia.by.orelya",link:"https://www.instagram.com/alkemia.by.orelya/"},{text:"   ·   "},{text:"Site : alkemia.netlify.app",link:"https://alkemia.netlify.app/"}],style:"socials"}
    );
    var doc={
      pageSize:"A4",pageMargins:[40,45,40,45],
@@ -235,7 +236,8 @@ function openPrintableReport(scores,top3){
        body:{fontSize:10.5,color:"#d2afb7",lineHeight:1.4},
        offerTitle:{fontSize:18,bold:true,color:"#efd2d7",margin:[0,8,0,4]},
        link:{fontSize:10,bold:true,color:"#e7b6c1",decoration:"underline"},
-       footer:{fontSize:8,color:"#a9848d",alignment:"center"}
+       footer:{fontSize:8,color:"#a9848d",alignment:"center"},
+       socials:{fontSize:9,bold:true,color:"#d7a8b3",alignment:"center",decoration:"underline"}
      },
      content:content
    };
