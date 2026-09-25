@@ -289,3 +289,28 @@ html body main .about-aurelia p{max-width:820px!important}
  .download-report{padding:26px 20px;margin-top:40px;}
  .download-report button{width:100%;padding:15px 14px;}
 }
+
+/* Liens ALKÉMIA en fin de résultats */
+.result-social-links{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin:22px 0 10px;
+  text-align:center;
+  font-size:13px;
+  font-weight:600;
+}
+.result-social-links a{
+  color:#d7a8b3;
+  text-decoration:none;
+  border-bottom:1px solid rgba(215,168,179,.45);
+  padding-bottom:2px;
+}
+.result-social-links a:hover{color:#efd2d7;border-bottom-color:#efd2d7;}
+.result-social-links span{color:#8f6d75;}
+@media(max-width:600px){
+  .result-social-links{flex-direction:column;gap:8px;}
+  .result-social-links span{display:none;}
+}
