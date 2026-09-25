@@ -75,6 +75,12 @@ function renderResults(scores,top3){
  <div class="scores-grid">${dimensions.map(d=>`<div class="score-card ${top3.some(p=>p.key===d.key)?"score-card--priority":""}"><span>${d.label}</span><strong>${scores[d.key]} %</strong>${top3.some(p=>p.key===d.key)?'<em>À travailler en priorité</em>':""}</div>`).join("")}</div>
  <h2>VOICI LES 3 ENDROITS OÙ TON BUSINESS TE DEMANDE AUJOURD’HUI DE SHIFTER.</h2>
  <div class="priority-list">${top3.map((d,idx)=>`<article class="result-card"><div class="score-badge">#${idx+1} — ${d.label} · ${scores[d.key]} %</div><h3>${d.result.title}</h3><p>${d.result.body}</p><h4>Ce qui peut se jouer derrière</h4><p>${d.result.behind}</p><h4>Quand cette dimension se libère</h4><p>${d.result.liberated}</p></article>`).join("")}</div>
+ <section class="download-report">
+   <div class="eyebrow">GARDE TES RÉSULTATS</div>
+   <h2>Tu veux pouvoir revenir dessus tranquillement ?</h2>
+   <p>Je t’ai préparé une version de ton diagnostic à conserver : tes <strong>12 scores</strong>, tes <strong>3 priorités</strong> et les pistes qui peuvent se jouer derrière chacune d’elles.</p>
+   <button id="download-report-btn" type="button">↓ TÉLÉCHARGER MON RAPPORT PERSONNALISÉ</button>
+ </section>
  <section class="about-aurelia">
    <div class="about-top">
      <div class="about-photo"><img src="/1000062207.png" alt="Aurélia, fondatrice d’ALKÉMIA"></div>
@@ -107,10 +113,64 @@ function renderResults(scores,top3){
    <article class="offer-card"><div class="offer-for">POUR ALLER PLUS LOIN QUE TON BUSINESS</div><div class="eyebrow">ORIGINE</div><h3>Tu sens que ce qui se joue dépasse largement ton business ?</h3><p>ORIGINE est mon accompagnement individuel pour aller travailler en profondeur sur tes programmes inconscients, à partir de ta propre carte du ciel. Ici, on travaille sur toi à 360°.</p><a class="cta" href="https://alkemia.netlify.app/origine" target="_blank" rel="noopener">DÉCOUVRIR ORIGINE →</a></article>
  </div>`;
  document.getElementById("success-btn").addEventListener("click",joinSuccess);
+ document.getElementById("download-report-btn").addEventListener("click",()=>openPrintableReport(scores,top3));
 }
 
 async function joinSuccess(){
  const fd=new URLSearchParams(); fd.append("form-name","success-priority"); fd.append("prenom",lead.prenom); fd.append("email",lead.email); fd.append("interet_success","oui");
  await fetch("/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:fd.toString()});
  const b=document.getElementById("success-btn"); b.textContent="C’EST BON, TU ES SUR LA LISTE PRIORITAIRE ✓"; b.disabled=true;
+}
+
+
+function escapeHtml(value){
+ return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]));
+}
+
+function openPrintableReport(scores,top3){
+ const prenom=escapeHtml(lead.prenom||"");
+ const scoreRows=dimensions.map(d=>`
+   <div class="r-score ${top3.some(p=>p.key===d.key)?"priority":""}">
+     <span>${d.label}</span><strong>${scores[d.key]} %</strong>
+   </div>`).join("");
+ const priorities=top3.map((d,idx)=>`
+   <section class="r-priority page-break">
+     <div class="kicker">PRIORITÉ #${idx+1} · ${d.label} · ${scores[d.key]} %</div>
+     <h2>${d.result.title}</h2>
+     <p>${d.result.body}</p>
+     <h3>Ce qui peut se jouer derrière</h3><p>${d.result.behind}</p>
+     <h3>Quand cette dimension se libère</h3><p>${d.result.liberated}</p>
+   </section>`).join("");
+ const report=`<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+ <title>Diagnostic ALKÉMIA — ${prenom}</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <style>
+ @page{size:A4;margin:15mm}*{box-sizing:border-box}body{margin:0;background:#0a0909;color:#ead0d5;font-family:Montserrat,Arial,sans-serif;line-height:1.6}
+ .report{max-width:900px;margin:auto;padding:52px 42px}.cover{min-height:90vh;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid #5c3d45}
+ .brand,.kicker{color:#d7a8b3;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}.cover h1,h2{font-family:"Cormorant Garamond",serif;line-height:1.02}
+ .cover h1{font-size:62px;margin:16px 0}.cover p{font-size:18px;max-width:650px}.name{margin-top:35px;font-size:15px}.name strong{color:#fff}
+ .overview{padding:52px 0}.overview h2,.r-priority h2,.next h2{font-size:42px;margin:8px 0 24px}.scores{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+ .r-score{border:1px solid #49343a;border-radius:14px;padding:16px}.r-score span{display:block;color:#d7a8b3;font-size:11px;font-weight:700;letter-spacing:.08em}.r-score strong{display:block;font-family:"Cormorant Garamond",serif;font-size:34px}
+ .r-score.priority{border:2px solid #d7a8b3;background:#211519}.r-priority{padding:52px 0;border-top:1px solid #49343a}.r-priority p,.next p{color:#d2afb7}.r-priority h3{margin:28px 0 5px;color:#d7a8b3;font-size:13px;text-transform:uppercase;letter-spacing:.08em}
+ .next{padding:52px 0;border-top:1px solid #49343a}.door{margin:20px 0;padding:20px;border:1px solid #49343a;border-radius:14px}.door h3{font-family:"Cormorant Garamond",serif;font-size:28px;margin:0 0 8px}.door a{color:#f0c9d2;font-weight:700}
+ .footer{padding:30px 0;color:#a9848d;font-size:12px;text-align:center}.printbar{position:sticky;top:0;background:#d7a8b3;color:#171012;padding:12px;text-align:center;font-weight:700;z-index:2}.printbar button{border:0;border-radius:999px;padding:10px 18px;margin-left:12px;background:#171012;color:#fff;font-weight:700;cursor:pointer}
+ @media print{body{background:#fff;color:#24191c}.report{padding:0}.printbar{display:none}.cover{min-height:250mm}.r-score,.door{break-inside:avoid}.page-break{break-before:page}.r-priority p,.next p{color:#4e3b40}.r-score.priority{background:#f4e8eb}.footer{color:#755c62}a{color:#24191c}}
+ @media(max-width:650px){.report{padding:32px 20px}.cover h1{font-size:45px}.scores{grid-template-columns:repeat(2,1fr)}.printbar button{display:block;margin:8px auto 0}}
+ </style></head><body>
+ <div class="printbar">TON RAPPORT EST PRÊT <button onclick="window.print()">ENREGISTRER EN PDF ↓</button></div>
+ <main class="report">
+   <section class="cover"><div class="brand">ALKÉMIA · DIAGNOSTIC BUSINESS</div><h1>Les 3 endroits où ton identité te demande aujourd’hui de shifter.</h1><p>Un instantané de ton identité entrepreneuriale à partir de tes réponses au diagnostic.</p><div class="name">RÉSULTATS DE <strong>${prenom.toUpperCase()}</strong></div></section>
+   <section class="overview"><div class="kicker">TON BUSINESS AUJOURD’HUI</div><h2>Tes 12 dimensions</h2><div class="scores">${scoreRows}</div></section>
+   ${priorities}
+   <section class="next page-break"><div class="kicker">ET MAINTENANT ?</div><h2>Tu sais où ça bloque. Maintenant, tu peux travailler dessus.</h2>
+     <div class="door"><h3>SUCCESS</h3><p>Un accompagnement de groupe entièrement consacré à ton identité entrepreneuriale, qui ouvrira prochainement ses portes.</p><a href="https://diagnostic-success.netlify.app/">Revenir au diagnostic et rejoindre la liste prioritaire →</a></div>
+     <div class="door"><h3>Les Codes d’ALKÉMIA</h3><p>Pour commencer à ton rythme, en autonomie, sur une énergie précise.</p><a href="https://lescodesdalkemia.netlify.app/">Découvrir les Codes d’ALKÉMIA →</a></div>
+     <div class="door"><h3>ORIGINE</h3><p>Pour aller plus loin que ton business et travailler en profondeur sur tes programmes inconscients.</p><a href="https://alkemia.netlify.app/origine">Découvrir ORIGINE →</a></div>
+   </section>
+   <div class="footer">Aurélia · Experte en Reprogrammation Neuro-Identitaire · Fondatrice de la méthode ALKÉMIA</div>
+ </main></body></html>`;
+ const w=window.open("","_blank");
+ if(!w){alert("Ton navigateur a bloqué l’ouverture du rapport. Autorise les fenêtres pop-up pour ce site puis réessaie.");return;}
+ w.document.open(); w.document.write(report); w.document.close();
 }
