@@ -21,17 +21,6 @@ const leadForm=document.getElementById("lead-form");
 const quiz=document.getElementById("quiz");
 const results=document.getElementById("results");
 
-// Mode aperçu temporaire : ?preview=results ouvre directement des résultats fictifs.
-const previewParams=new URLSearchParams(window.location.search);
-if(previewParams.get("preview")==="results"){
-  const previewScores={audace:75,prosperite:75,communication:50,intuition:65,visibilite:60,expertise:85,relation:60,puissance:75,vision:85,leadership:55,impact:45,creativite:70};
-  const previewTop3=[...dimensions].sort((a,b)=>previewScores[a.key]-previewScores[b.key]).slice(0,3);
-  lead={prenom:"",email:"preview@alkemia.local"};
-  document.querySelector(".hero").classList.add("hidden");
-  quiz.classList.add("hidden");
-  renderResults(previewScores,previewTop3);
-}
-
 leadForm.addEventListener("submit",async e=>{
  e.preventDefault();
  const fd=new FormData(leadForm);
