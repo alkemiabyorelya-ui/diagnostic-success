@@ -271,3 +271,21 @@ html body main .about-aurelia p{max-width:820px!important}
  .offers-transition{margin-top:52px;padding:30px 10px;}
  .offers-transition h2{font-size:34px;}
 }
+
+
+/* Rapport personnalisé — bloc de téléchargement */
+.download-report{
+  margin:52px 0 22px;
+  padding:34px 38px;
+  border:1px solid rgba(215,168,179,.38);
+  border-radius:22px;
+  background:linear-gradient(145deg,rgba(215,168,179,.16),rgba(255,255,255,.018));
+  text-align:center;
+}
+.download-report h2{margin:10px auto 14px;max-width:720px;}
+.download-report p{max-width:760px;margin:0 auto 22px;}
+.download-report button{font-size:.86rem;}
+@media(max-width:700px){
+ .download-report{padding:26px 20px;margin-top:40px;}
+ .download-report button{width:100%;padding:15px 14px;}
+}
