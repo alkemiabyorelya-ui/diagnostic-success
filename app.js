@@ -160,7 +160,7 @@ function openPrintableReport(scores,top3){
  </style></head><body>
  <div class="printbar">TON RAPPORT EST PRÊT <button id="pdf-download">TÉLÉCHARGER LE PDF ↓</button></div>
  <main class="report">
-   <section class="cover"><div class="brand">ALKÉMIA · DIAGNOSTIC BUSINESS</div><h1>Les 3 endroits où ton identité te demande aujourd’hui de shifter.</h1><p>Un instantané de ton identité entrepreneuriale à partir de tes réponses au diagnostic.</p><div class="name">RÉSULTATS DE <strong>${prenom.toUpperCase()}</strong></div></section>
+   <section class="cover"><div class="brand">ALKÉMIA · DIAGNOSTIC BUSINESS</div><h1>Les 3 endroits où ton identité te demande aujourd’hui de shifter.</h1><p>Un instantané de ton identité entrepreneuriale à partir de tes réponses au diagnostic.</p></section>
    <section class="overview"><div class="kicker">TON BUSINESS AUJOURD’HUI</div><h2>Tes 12 dimensions</h2><div class="scores">${scoreRows}</div></section>
    ${priorities}
    <section class="next page-break"><div class="kicker">ET MAINTENANT ?</div><h2>Tu sais où ça bloque. Maintenant, tu peux travailler dessus.</h2>
@@ -170,13 +170,75 @@ function openPrintableReport(scores,top3){
    </section>
    <div class="footer">Aurélia · Experte en Reprogrammation Neuro-Identitaire · Fondatrice de la méthode ALKÉMIA</div>
  </main>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"><\/script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js"><\/script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js"><\/script>
  <script>
  document.getElementById("pdf-download").addEventListener("click",function(){
-   var btn=this; var old=btn.textContent; btn.textContent="CRÉATION DU PDF…"; btn.disabled=true;
-   var element=document.querySelector(".report");
-   var opt={margin:[8,8,8,8],filename:"diagnostic-alkemia-${prenom.toLowerCase().replace(/[^a-z0-9à-ÿ]+/gi,"-")}.pdf",image:{type:"jpeg",quality:.96},html2canvas:{scale:1.7,useCORS:true,backgroundColor:"#0a0909"},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},pagebreak:{mode:["css","legacy"]}};
-   html2pdf().set(opt).from(element).save().then(function(){btn.textContent=old;btn.disabled=false;}).catch(function(){btn.textContent=old;btn.disabled=false;window.print();});
+   var btn=this, old=btn.textContent; btn.textContent="CRÉATION DU PDF…"; btn.disabled=true;
+   var scores=${JSON.stringify(scores)};
+   var dims=${JSON.stringify(dimensions.map(d=>({key:d.key,label:d.label})))};
+   var priorities=${JSON.stringify(top3.map(d=>({key:d.key,label:d.label,title:d.result.title,body:d.result.body,behind:d.result.behind,liberated:d.result.liberated})))};
+   var scoreCells=dims.map(function(d){
+     var isPriority=priorities.some(function(p){return p.key===d.key;});
+     return {stack:[
+       {text:d.label,style:"scoreLabel"},
+       {text:String(scores[d.key])+" %",style:"scoreValue"}
+     ],fillColor:isPriority?"#2b171d":"#151112",color:isPriority?"#f3d7dd":"#e7c6cd",margin:[9,9,9,9]};
+   });
+   var rows=[]; for(var i=0;i<scoreCells.length;i+=3) rows.push(scoreCells.slice(i,i+3));
+   var content=[
+     {text:"ALKÉMIA · DIAGNOSTIC BUSINESS",style:"kicker",margin:[0,0,0,18]},
+     {text:"Les 3 endroits où ton identité te demande aujourd’hui de shifter.",style:"coverTitle",margin:[0,0,0,18]},
+     {text:"Un instantané de ton identité entrepreneuriale à partir de tes réponses au diagnostic.",style:"intro",margin:[0,0,0,34]},
+     {canvas:[{type:"line",x1:0,y1:0,x2:515,y2:0,lineWidth:1,lineColor:"#6a4650"}],margin:[0,0,0,30]},
+     {text:"TON BUSINESS AUJOURD’HUI",style:"kicker"},
+     {text:"Tes 12 dimensions",style:"sectionTitle",margin:[0,5,0,16]},
+     {table:{widths:["*","*","*"],body:rows},layout:{hLineColor:function(){return "#6a4650";},vLineColor:function(){return "#6a4650";},paddingLeft:function(){return 3;},paddingRight:function(){return 3;},paddingTop:function(){return 3;},paddingBottom:function(){return 3;}}}
+   ];
+   priorities.forEach(function(p,idx){
+     content.push(
+       {text:"PRIORITÉ #"+(idx+1)+" · "+p.label+" · "+scores[p.key]+" %",style:"kicker",pageBreak:"before",margin:[0,0,0,12]},
+       {text:p.title,style:"priorityTitle",margin:[0,0,0,14]},
+       {text:p.body,style:"body",margin:[0,0,0,20]},
+       {text:"CE QUI PEUT SE JOUER DERRIÈRE",style:"subhead"},
+       {text:p.behind,style:"body",margin:[0,5,0,20]},
+       {text:"QUAND CETTE DIMENSION SE LIBÈRE",style:"subhead"},
+       {text:p.liberated,style:"body",margin:[0,5,0,0]}
+     );
+   });
+   content.push(
+     {text:"ET MAINTENANT ?",style:"kicker",pageBreak:"before"},
+     {text:"Tu sais où ça bloque. Maintenant, tu peux travailler dessus.",style:"sectionTitle",margin:[0,5,0,20]},
+     {text:"SUCCESS",style:"offerTitle"},{text:"Un accompagnement de groupe entièrement consacré à ton identité entrepreneuriale, qui ouvrira prochainement ses portes.",style:"body"},
+     {text:"Revenir au diagnostic et rejoindre la liste prioritaire →",link:"https://diagnostic-success.netlify.app/",style:"link",margin:[0,4,0,18]},
+     {text:"LES CODES D’ALKÉMIA",style:"offerTitle"},{text:"Pour commencer à ton rythme, en autonomie, sur une énergie précise.",style:"body"},
+     {text:"Découvrir les Codes d’ALKÉMIA →",link:"https://lescodesdalkemia.netlify.app/",style:"link",margin:[0,4,0,18]},
+     {text:"ORIGINE",style:"offerTitle"},{text:"Pour aller plus loin que ton business et travailler en profondeur sur tes programmes inconscients.",style:"body"},
+     {text:"Découvrir ORIGINE →",link:"https://alkemia.netlify.app/origine",style:"link",margin:[0,4,0,28]},
+     {text:"Aurélia · Experte en Reprogrammation Neuro-Identitaire · Fondatrice de la méthode ALKÉMIA",style:"footer"}
+   );
+   var doc={
+     pageSize:"A4",pageMargins:[40,45,40,45],
+     background:function(){return {canvas:[{type:"rect",x:0,y:0,w:595.28,h:841.89,color:"#0a0909"}]};},
+     defaultStyle:{font:"Roboto",fontSize:10.5,color:"#d2afb7",lineHeight:1.35},
+     styles:{
+       kicker:{fontSize:9,bold:true,color:"#d7a8b3",characterSpacing:1.5},
+       coverTitle:{fontSize:34,bold:true,color:"#efd2d7",lineHeight:1.05},
+       intro:{fontSize:13,color:"#d2afb7"},
+       sectionTitle:{fontSize:25,bold:true,color:"#efd2d7"},
+       scoreLabel:{fontSize:8,bold:true,color:"#d7a8b3"},
+       scoreValue:{fontSize:20,bold:true,color:"#efd2d7",margin:[0,5,0,0]},
+       priorityTitle:{fontSize:25,bold:true,color:"#efd2d7",lineHeight:1.08},
+       subhead:{fontSize:9,bold:true,color:"#d7a8b3",characterSpacing:.8},
+       body:{fontSize:10.5,color:"#d2afb7",lineHeight:1.4},
+       offerTitle:{fontSize:18,bold:true,color:"#efd2d7",margin:[0,8,0,4]},
+       link:{fontSize:10,bold:true,color:"#e7b6c1",decoration:"underline"},
+       footer:{fontSize:8,color:"#a9848d",alignment:"center"}
+     },
+     content:content
+   };
+   try{pdfMake.createPdf(doc).download("diagnostic-alkemia.pdf",function(){btn.textContent=old;btn.disabled=false;});}
+   catch(e){btn.textContent=old;btn.disabled=false;alert("Le téléchargement n’a pas pu démarrer. Réessaie dans quelques secondes.");}
  });
  <\/script></body></html>`;
  const w=window.open("","_blank");
