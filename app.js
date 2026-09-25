@@ -101,6 +101,12 @@ function renderResults(scores,top3){
    <p>Je t’ai préparé une version de ton diagnostic à conserver : tes <strong>12 scores</strong>, tes <strong>3 priorités</strong> et les pistes qui peuvent se jouer derrière chacune d’elles.</p>
    <button id="download-report-btn" type="button">↓ TÉLÉCHARGER MON RAPPORT PERSONNALISÉ</button>
  </section>
+
+ <div class="result-social-links">
+   <a href="https://www.instagram.com/alkemia.by.orelya/" target="_blank" rel="noopener">Instagram · @alkemia.by.orelya</a>
+   <span>·</span>
+   <a href="https://alkemia.netlify.app/" target="_blank" rel="noopener">alkemia.netlify.app</a>
+ </div>
 `;
  document.getElementById("success-btn").addEventListener("click",joinSuccess);
  document.getElementById("download-report-btn").addEventListener("click",()=>openPrintableReport(scores,top3));
