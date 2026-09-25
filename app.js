@@ -75,12 +75,6 @@ function renderResults(scores,top3){
  <div class="scores-grid">${dimensions.map(d=>`<div class="score-card ${top3.some(p=>p.key===d.key)?"score-card--priority":""}"><span>${d.label}</span><strong>${scores[d.key]} %</strong>${top3.some(p=>p.key===d.key)?'<em>À travailler en priorité</em>':""}</div>`).join("")}</div>
  <h2>VOICI LES 3 ENDROITS OÙ TON BUSINESS TE DEMANDE AUJOURD’HUI DE SHIFTER.</h2>
  <div class="priority-list">${top3.map((d,idx)=>`<article class="result-card"><div class="score-badge">#${idx+1} — ${d.label} · ${scores[d.key]} %</div><h3>${d.result.title}</h3><p>${d.result.body}</p><h4>Ce qui peut se jouer derrière</h4><p>${d.result.behind}</p><h4>Quand cette dimension se libère</h4><p>${d.result.liberated}</p></article>`).join("")}</div>
- <section class="download-report">
-   <div class="eyebrow">GARDE TES RÉSULTATS</div>
-   <h2>Tu veux pouvoir revenir dessus tranquillement ?</h2>
-   <p>Je t’ai préparé une version de ton diagnostic à conserver : tes <strong>12 scores</strong>, tes <strong>3 priorités</strong> et les pistes qui peuvent se jouer derrière chacune d’elles.</p>
-   <button id="download-report-btn" type="button">↓ TÉLÉCHARGER MON RAPPORT PERSONNALISÉ</button>
- </section>
  <section class="about-aurelia">
    <div class="about-top">
      <div class="about-photo"><img src="/1000062207.png" alt="Aurélia, fondatrice d’ALKÉMIA"></div>
@@ -111,7 +105,14 @@ function renderResults(scores,top3){
    <article class="offer-card primary"><div class="offer-for">TON IDENTITÉ D’ENTREPRENEURE FREINE ENCORE TON BUSINESS À CERTAINS ENDROITS</div><div class="eyebrow">SUCCESS</div><h2>Ton business ne pourra pas aller plus loin que l’identité avec laquelle tu essaies de le construire.</h2><p>SUCCESS est un accompagnement de groupe entièrement consacré à <strong>ton identité entrepreneuriale</strong>, qui ouvrira prochainement ses portes. Tu peux t’inscrire dès maintenant sur la liste prioritaire.</p><button id="success-btn">JE M’INSCRIS SUR LA LISTE PRIORITAIRE SUCCESS →</button></article>
    <article class="offer-card"><div class="offer-for">POUR COMMENCER À TON RYTHME, EN AUTONOMIE</div><div class="eyebrow">LES CODES D’ALKÉMIA</div><h3>Tu veux commencer seule sur une énergie précise ?</h3><p>Tu peux commencer à travailler directement sur l’énergie zodiacale qui correspond à ce que ton diagnostic vient de mettre en lumière.</p><a class="cta" href="https://lescodesdalkemia.netlify.app/" target="_blank" rel="noopener">DÉCOUVRIR LES CODES D’ALKÉMIA →</a></article>
    <article class="offer-card"><div class="offer-for">POUR ALLER PLUS LOIN QUE TON BUSINESS</div><div class="eyebrow">ORIGINE</div><h3>Tu sens que ce qui se joue dépasse largement ton business ?</h3><p>ORIGINE est mon accompagnement individuel pour aller travailler en profondeur sur tes programmes inconscients, à partir de ta propre carte du ciel. Ici, on travaille sur toi à 360°.</p><a class="cta" href="https://alkemia.netlify.app/origine" target="_blank" rel="noopener">DÉCOUVRIR ORIGINE →</a></article>
- </div>`;
+ </div>
+ <section class="download-report">
+   <div class="eyebrow">GARDE TES RÉSULTATS</div>
+   <h2>Tu veux pouvoir revenir dessus tranquillement ?</h2>
+   <p>Je t’ai préparé une version de ton diagnostic à conserver : tes <strong>12 scores</strong>, tes <strong>3 priorités</strong> et les pistes qui peuvent se jouer derrière chacune d’elles.</p>
+   <button id="download-report-btn" type="button">↓ TÉLÉCHARGER MON RAPPORT PERSONNALISÉ</button>
+ </section>
+`;
  document.getElementById("success-btn").addEventListener("click",joinSuccess);
  document.getElementById("download-report-btn").addEventListener("click",()=>openPrintableReport(scores,top3));
 }
@@ -174,6 +175,7 @@ function openPrintableReport(scores,top3){
  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js"><\/script>
  <script>
  document.getElementById("pdf-download").addEventListener("click",function(){
+   if(typeof pdfMake==="undefined"){alert("Le générateur PDF n’a pas pu se charger. Recharge cette page puis réessaie.");return;}
    var btn=this, old=btn.textContent; btn.textContent="CRÉATION DU PDF…"; btn.disabled=true;
    var scores=${JSON.stringify(scores)};
    var dims=${JSON.stringify(dimensions.map(d=>({key:d.key,label:d.label})))};
@@ -237,8 +239,17 @@ function openPrintableReport(scores,top3){
      },
      content:content
    };
-   try{pdfMake.createPdf(doc).download("diagnostic-alkemia.pdf",function(){btn.textContent=old;btn.disabled=false;});}
-   catch(e){btn.textContent=old;btn.disabled=false;alert("Le téléchargement n’a pas pu démarrer. Réessaie dans quelques secondes.");}
+   try{
+     var pdf=pdfMake.createPdf(doc);
+     pdf.getBlob(function(blob){
+       var url=URL.createObjectURL(blob);
+       var a=document.createElement("a");
+       a.href=url;a.download="diagnostic-alkemia.pdf";
+       document.body.appendChild(a);a.click();a.remove();
+       setTimeout(function(){URL.revokeObjectURL(url);},3000);
+       btn.textContent=old;btn.disabled=false;
+     });
+   }catch(e){btn.textContent=old;btn.disabled=false;alert("Le téléchargement n’a pas pu démarrer. Recharge la page puis réessaie.");}
  });
  <\/script></body></html>`;
  const w=window.open("","_blank");
