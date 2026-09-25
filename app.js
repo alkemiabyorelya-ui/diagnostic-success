@@ -26,7 +26,7 @@ const previewParams=new URLSearchParams(window.location.search);
 if(previewParams.get("preview")==="results"){
   const previewScores={audace:75,prosperite:75,communication:50,intuition:65,visibilite:60,expertise:85,relation:60,puissance:75,vision:85,leadership:55,impact:45,creativite:70};
   const previewTop3=[...dimensions].sort((a,b)=>previewScores[a.key]-previewScores[b.key]).slice(0,3);
-  lead={prenom:"Aperçu",email:"preview@alkemia.local"};
+  lead={prenom:"",email:"preview@alkemia.local"};
   document.querySelector(".hero").classList.add("hidden");
   quiz.classList.add("hidden");
   renderResults(previewScores,previewTop3);
@@ -128,7 +128,7 @@ function escapeHtml(value){
 }
 
 function openPrintableReport(scores,top3){
- const prenom=escapeHtml(lead.prenom||"");
+ const prenom=escapeHtml(lead.prenom||"TON RAPPORT");
  const scoreRows=dimensions.map(d=>`
    <div class="r-score ${top3.some(p=>p.key===d.key)?"priority":""}">
      <span>${d.label}</span><strong>${scores[d.key]} %</strong>
@@ -147,7 +147,7 @@ function openPrintableReport(scores,top3){
  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
  <style>
  @page{size:A4;margin:15mm}*{box-sizing:border-box}body{margin:0;background:#0a0909;color:#ead0d5;font-family:Montserrat,Arial,sans-serif;line-height:1.6}
- .report{max-width:900px;margin:auto;padding:52px 42px}.cover{min-height:90vh;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid #5c3d45}
+ .report{max-width:900px;margin:auto;padding:52px 42px}.cover{padding:46px 0 58px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid #5c3d45}
  .brand,.kicker{color:#d7a8b3;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}.cover h1,h2{font-family:"Cormorant Garamond",serif;line-height:1.02}
  .cover h1{font-size:62px;margin:16px 0}.cover p{font-size:18px;max-width:650px}.name{margin-top:35px;font-size:15px}.name strong{color:#fff}
  .overview{padding:52px 0}.overview h2,.r-priority h2,.next h2{font-size:42px;margin:8px 0 24px}.scores{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
@@ -155,10 +155,10 @@ function openPrintableReport(scores,top3){
  .r-score.priority{border:2px solid #d7a8b3;background:#211519}.r-priority{padding:52px 0;border-top:1px solid #49343a}.r-priority p,.next p{color:#d2afb7}.r-priority h3{margin:28px 0 5px;color:#d7a8b3;font-size:13px;text-transform:uppercase;letter-spacing:.08em}
  .next{padding:52px 0;border-top:1px solid #49343a}.door{margin:20px 0;padding:20px;border:1px solid #49343a;border-radius:14px}.door h3{font-family:"Cormorant Garamond",serif;font-size:28px;margin:0 0 8px}.door a{color:#f0c9d2;font-weight:700}
  .footer{padding:30px 0;color:#a9848d;font-size:12px;text-align:center}.printbar{position:sticky;top:0;background:#d7a8b3;color:#171012;padding:12px;text-align:center;font-weight:700;z-index:2}.printbar button{border:0;border-radius:999px;padding:10px 18px;margin-left:12px;background:#171012;color:#fff;font-weight:700;cursor:pointer}
- @media print{body{background:#fff;color:#24191c}.report{padding:0}.printbar{display:none}.cover{min-height:250mm}.r-score,.door{break-inside:avoid}.page-break{break-before:page}.r-priority p,.next p{color:#4e3b40}.r-score.priority{background:#f4e8eb}.footer{color:#755c62}a{color:#24191c}}
+ @media print{body{background:#fff;color:#24191c}.report{padding:0}.printbar{display:none}.cover{padding:20mm 0 16mm}.r-score,.door{break-inside:avoid}.page-break{break-before:page}.r-priority p,.next p{color:#4e3b40}.r-score.priority{background:#f4e8eb}.footer{color:#755c62}a{color:#24191c}}
  @media(max-width:650px){.report{padding:32px 20px}.cover h1{font-size:45px}.scores{grid-template-columns:repeat(2,1fr)}.printbar button{display:block;margin:8px auto 0}}
  </style></head><body>
- <div class="printbar">TON RAPPORT EST PRÊT <button onclick="window.print()">ENREGISTRER EN PDF ↓</button></div>
+ <div class="printbar">TON RAPPORT EST PRÊT <button id="pdf-download">TÉLÉCHARGER LE PDF ↓</button></div>
  <main class="report">
    <section class="cover"><div class="brand">ALKÉMIA · DIAGNOSTIC BUSINESS</div><h1>Les 3 endroits où ton identité te demande aujourd’hui de shifter.</h1><p>Un instantané de ton identité entrepreneuriale à partir de tes réponses au diagnostic.</p><div class="name">RÉSULTATS DE <strong>${prenom.toUpperCase()}</strong></div></section>
    <section class="overview"><div class="kicker">TON BUSINESS AUJOURD’HUI</div><h2>Tes 12 dimensions</h2><div class="scores">${scoreRows}</div></section>
@@ -169,7 +169,16 @@ function openPrintableReport(scores,top3){
      <div class="door"><h3>ORIGINE</h3><p>Pour aller plus loin que ton business et travailler en profondeur sur tes programmes inconscients.</p><a href="https://alkemia.netlify.app/origine">Découvrir ORIGINE →</a></div>
    </section>
    <div class="footer">Aurélia · Experte en Reprogrammation Neuro-Identitaire · Fondatrice de la méthode ALKÉMIA</div>
- </main></body></html>`;
+ </main>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"><\/script>
+ <script>
+ document.getElementById("pdf-download").addEventListener("click",function(){
+   var btn=this; var old=btn.textContent; btn.textContent="CRÉATION DU PDF…"; btn.disabled=true;
+   var element=document.querySelector(".report");
+   var opt={margin:[8,8,8,8],filename:"diagnostic-alkemia-${prenom.toLowerCase().replace(/[^a-z0-9à-ÿ]+/gi,"-")}.pdf",image:{type:"jpeg",quality:.96},html2canvas:{scale:1.7,useCORS:true,backgroundColor:"#0a0909"},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},pagebreak:{mode:["css","legacy"]}};
+   html2pdf().set(opt).from(element).save().then(function(){btn.textContent=old;btn.disabled=false;}).catch(function(){btn.textContent=old;btn.disabled=false;window.print();});
+ });
+ <\/script></body></html>`;
  const w=window.open("","_blank");
  if(!w){alert("Ton navigateur a bloqué l’ouverture du rapport. Autorise les fenêtres pop-up pour ce site puis réessaie.");return;}
  w.document.open(); w.document.write(report); w.document.close();
