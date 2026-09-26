@@ -157,7 +157,7 @@ function openPrintableReport(scores,top3){
  @media print{body{background:#fff;color:#24191c}.report{padding:0}.printbar{display:none}.cover{padding:20mm 0 16mm}.r-score,.door{break-inside:avoid}.page-break{break-before:page}.r-priority p,.next p{color:#4e3b40}.r-score.priority{background:#f4e8eb}.footer{color:#755c62}a{color:#24191c}}
  @media(max-width:650px){.report{padding:32px 20px}.cover h1{font-size:45px}.scores{grid-template-columns:repeat(2,1fr)}.printbar button{display:block;margin:8px auto 0}}
  </style></head><body>
- <div class="printbar">TON RAPPORT EST PRÊT <button id="pdf-download">TÉLÉCHARGER LE PDF ↓</button></div>
+ <div class="printbar">TON RAPPORT EST PRÊT <button id="pdf-download">ENREGISTRER EN PDF ↓</button></div>
  <main class="report">
    <section class="cover"><div class="brand">ALKÉMIA · DIAGNOSTIC BUSINESS</div><h1>Les 3 endroits où ton identité te demande aujourd’hui de shifter.</h1><p>Un instantané de ton identité entrepreneuriale à partir de tes réponses au diagnostic.</p></section>
    <section class="overview"><div class="kicker">TON BUSINESS AUJOURD’HUI</div><h2>Tes 12 dimensions</h2><div class="scores">${scoreRows}</div></section>
@@ -169,122 +169,14 @@ function openPrintableReport(scores,top3){
    </section>
    <div class="footer">Aurélia · Experte en Reprogrammation Neuro-Identitaire · Fondatrice de la méthode ALKÉMIA</div>
  </main>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js"><\/script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js"><\/script>
  <script>
  document.getElementById("pdf-download").addEventListener("click",function(){
-   if(typeof pdfMake==="undefined"){alert("Le générateur PDF n’a pas pu se charger. Recharge cette page puis réessaie.");return;}
-   var btn=this, old=btn.textContent; btn.textContent="CRÉATION DU PDF…"; btn.disabled=true;
-   var scores=${JSON.stringify(scores)};
-   var dims=${JSON.stringify(dimensions.map(d=>({key:d.key,label:d.label})))};
-   var priorities=${JSON.stringify(top3.map(d=>({key:d.key,label:d.label,title:d.result.title,body:d.result.body,behind:d.result.behind,liberated:d.result.liberated})))};
-   var scoreCells=dims.map(function(d){
-     var isPriority=priorities.some(function(p){return p.key===d.key;});
-     return {stack:[
-       {text:d.label,style:isPriority?"scoreLabelHot":"scoreLabel"},
-       {text:String(scores[d.key])+" %",style:isPriority?"scoreValueHot":"scoreValue"},
-       isPriority?{text:"PRIORITÉ",style:"priorityPill"}:{text:" ",fontSize:6}
-     ],fillColor:isPriority?"#D58CA4":"#151112",color:isPriority?"#130B0E":"#E7C6CD",margin:[11,11,11,11]};
-   });
-   var rows=[]; for(var i=0;i<scoreCells.length;i+=3) rows.push(scoreCells.slice(i,i+3));
-   var content=[
-     {text:"ALKÉMIA",style:"coverBrand",margin:[0,20,0,95]},
-     {text:"TON DIAGNOSTIC\\nBUSINESS",style:"coverTitle"},
-     {text:"Les 3 endroits où ton identité d’entrepreneure te demande aujourd’hui de shifter.",style:"coverSub",margin:[0,18,0,32]},
-     {canvas:[{type:"line",x1:0,y1:0,x2:115,y2:0,lineWidth:3,lineColor:"#D58CA4"}],margin:[0,0,0,24]},
-     {text:(lead.prenom||"")+" · RAPPORT PERSONNALISÉ",style:"kicker"},
-     {text:"12 dimensions. 3 priorités. Un point de départ très clair.",style:"intro",margin:[0,8,0,0]},
-
-     {text:"TON BUSINESS\\nAUJOURD’HUI",style:"sectionTitle",pageBreak:"before"},
-     {text:"Tes 12 dimensions",style:"sectionSub",margin:[0,8,0,26]},
-     {table:{widths:["*","*","*"],body:rows},layout:{hLineColor:function(){return "#4A3038";},vLineColor:function(){return "#4A3038";},paddingLeft:function(){return 3;},paddingRight:function(){return 3;},paddingTop:function(){return 3;},paddingBottom:function(){return 3;}}}
-   ];
-   priorities.forEach(function(p,idx){
-     content.push(
-       {text:"PRIORITÉ 0"+(idx+1),style:"kicker",pageBreak:"before"},
-       {text:p.label+" · "+scores[p.key]+" %",style:"priorityHero",margin:[0,8,0,10]},
-       {canvas:[{type:"line",x1:0,y1:0,x2:515,y2:0,lineWidth:1,lineColor:"#D58CA4"}],margin:[0,0,0,24]},
-       {text:p.title,style:"priorityTitle",margin:[0,0,0,18]},
-       {text:p.body,style:"bodyLarge",margin:[0,0,0,25]},
-       {table:{widths:["*"],body:[[{stack:[
-         {text:"CE QUI PEUT TE FREINER",style:"boxKicker"},
-         {text:p.behind,style:"boxBody",margin:[0,7,0,20]},
-         {text:"QUAND ÇA SE DÉBLOQUE",style:"boxKicker"},
-         {text:p.liberated,style:"boxBodyHot",margin:[0,7,0,0]}
-       ],fillColor:"#24171C",margin:[18,16,18,16]}]]},layout:"noBorders"}
-     );
-   });
-   content.push(
-     {text:"TU SAIS MAINTENANT\\nOÙ ÇA BLOQUE.",style:"sectionTitle",pageBreak:"before"},
-     {text:"Mais le savoir ne va pas le shifter.",style:"sectionSubHot",margin:[0,10,0,22]},
-     {text:"Tu peux refermer ce rapport et retourner chercher une meilleure stratégie. Ou décider de travailler précisément sur ce que ton diagnostic vient de mettre en lumière.",style:"bodyLarge",margin:[0,0,0,28]},
-     {text:"TES 3 PRIORITÉS",style:"kicker"},
-     {text:priorities.map(function(p){return p.label;}).join(" · "),style:"threePriorities",margin:[0,10,0,22]},
-     {text:"Imagine ce qui pourrait changer dans ton business si tu arrêtais de freiner précisément à ces trois endroits.",style:"bodyLarge"},
-
-     {text:"SUCCESS",style:"kicker",pageBreak:"before"},
-     {text:"ET SI TON PROCHAIN NIVEAU DE BUSINESS NE DEMANDAIT PAS UNE MEILLEURE STRATÉGIE…",style:"successTitle"},
-     {text:"MAIS UNE NOUVELLE VERSION DE TOI POUR LA PORTER ?",style:"successTitleHot",margin:[0,7,0,28]},
-     {text:"SUCCESS est mon prochain accompagnement de groupe consacré à ton identité entrepreneuriale.",style:"bodyLarge",margin:[0,0,0,16]},
-     {text:"On ne va pas passer des semaines à t’expliquer ce que tu devrais faire dans ton business. Tu le sais probablement déjà.",style:"bodyLarge",margin:[0,0,0,16]},
-     {text:"On va travailler sur ce qui t’empêche encore de le faire, de l’assumer, de le recevoir ou de le soutenir pleinement.",style:"bodyLarge",margin:[0,0,0,28]},
-     {table:{widths:["*"],body:[[{text:"PAS POUR QUE TU SACHES ENCORE MIEUX CE QUE TU DEVRAIS FAIRE.\\n\\nPOUR QUE TU DEVIENNES CAPABLE DE LE FAIRE.",style:"successPromise",fillColor:"#D58CA4",margin:[20,18,20,18]}]]},layout:"noBorders",margin:[0,0,0,26]},
-     {text:"JE VEUX ÊTRE PRIORITAIRE POUR SUCCESS →",link:"https://diagnostic-success.netlify.app/",style:"ctaPdf",margin:[0,0,0,30]},
-     {text:"Commencer seule → Les Codes d’ALKÉMIA",link:"https://lescodesdalkemia.netlify.app/",style:"secondaryLink",margin:[0,0,0,9]},
-     {text:"Aller plus loin → ORIGINE",link:"https://alkemia.netlify.app/origine",style:"secondaryLink",margin:[0,0,0,36]},
-     {canvas:[{type:"line",x1:0,y1:0,x2:515,y2:0,lineWidth:1,lineColor:"#4A3038"}],margin:[0,0,0,22]},
-     {text:"AURÉLIA",style:"signature"},
-     {text:"Experte en Reprogrammation Neuro-Identitaire\\nFondatrice de la méthode ALKÉMIA",style:"contact",margin:[0,5,0,18]},
-     {text:"Instagram",style:"contactLabel"},{text:"https://www.instagram.com/alkemia.by.orelya/",link:"https://www.instagram.com/alkemia.by.orelya/",style:"contactLink",margin:[0,3,0,10]},
-     {text:"Site internet",style:"contactLabel"},{text:"https://alkemia.netlify.app/",link:"https://alkemia.netlify.app/",style:"contactLink"}
-   );
-   var doc={
-     pageSize:"A4",pageMargins:[40,46,40,46],
-     background:function(){return {canvas:[{type:"rect",x:0,y:0,w:595.28,h:841.89,color:"#0A0909"}]};},
-     footer:function(currentPage,pageCount){return {columns:[{text:"ALKÉMIA",style:"footerBrand"},{text:(currentPage<10?"0":"")+currentPage+" / "+(pageCount<10?"0":"")+pageCount,style:"pageNo",alignment:"right"}],margin:[40,0,40,22]};},
-     defaultStyle:{font:"Roboto",fontSize:10.5,color:"#D7C7CB",lineHeight:1.35},
-     styles:{
-       coverBrand:{fontSize:11,bold:true,color:"#D58CA4",characterSpacing:4},
-       coverTitle:{fontSize:38,bold:true,color:"#F8EFF2",lineHeight:.95},
-       coverSub:{fontSize:19,bold:true,color:"#E7AFBD",lineHeight:1.15},
-       kicker:{fontSize:9,bold:true,color:"#D58CA4",characterSpacing:1.8},
-       intro:{fontSize:11,color:"#B99EA6"},
-       sectionTitle:{fontSize:32,bold:true,color:"#F8EFF2",lineHeight:.98},
-       sectionSub:{fontSize:17,bold:true,color:"#D8B7C0"},
-       sectionSubHot:{fontSize:22,bold:true,color:"#E7AFBD"},
-       scoreLabel:{fontSize:7.5,bold:true,color:"#CBAEB6"},
-       scoreLabelHot:{fontSize:7.5,bold:true,color:"#130B0E"},
-       scoreValue:{fontSize:19,bold:true,color:"#F8EFF2",margin:[0,5,0,0]},
-       scoreValueHot:{fontSize:21,bold:true,color:"#130B0E",margin:[0,5,0,0]},
-       priorityPill:{fontSize:6,bold:true,color:"#F8E4EA",background:"#160D11",characterSpacing:.8},
-       priorityHero:{fontSize:30,bold:true,color:"#E7AFBD"},
-       priorityTitle:{fontSize:24,bold:true,color:"#F8EFF2",lineHeight:1.08},
-       bodyLarge:{fontSize:11,color:"#D7C7CB",lineHeight:1.5},
-       boxKicker:{fontSize:8,bold:true,color:"#D58CA4",characterSpacing:1.1},
-       boxBody:{fontSize:10.5,color:"#D7C7CB",lineHeight:1.45},
-       boxBodyHot:{fontSize:10.8,bold:true,color:"#F1C5D1",lineHeight:1.45},
-       threePriorities:{fontSize:24,bold:true,color:"#E7AFBD",lineHeight:1.15},
-       successTitle:{fontSize:25,bold:true,color:"#F8EFF2",lineHeight:1.04},
-       successTitleHot:{fontSize:25,bold:true,color:"#E7AFBD",lineHeight:1.04},
-       successPromise:{fontSize:11.5,bold:true,color:"#130B0E",alignment:"center",lineHeight:1.25},
-       ctaPdf:{fontSize:11.5,bold:true,color:"#F2C3D1",decoration:"underline"},
-       secondaryLink:{fontSize:10,bold:true,color:"#D7A8B3"},
-       signature:{fontSize:16,bold:true,color:"#F8EFF2"},
-       contact:{fontSize:9,color:"#BFAAB0"},
-       contactLabel:{fontSize:8,bold:true,color:"#D58CA4"},
-       contactLink:{fontSize:9,color:"#E7AFBD",decoration:"underline"},
-       footerBrand:{fontSize:7,bold:true,color:"#7F626B",characterSpacing:2},
-       pageNo:{fontSize:7,color:"#7F626B"}
-     },
-     content:content
-   };
-   try{
-     var pdf=pdfMake.createPdf(doc);
-     var finished=false;
-     var reset=function(){if(finished)return;finished=true;btn.textContent=old;btn.disabled=false;};
-     pdf.download("diagnostic-alkemia.pdf",reset);
-     setTimeout(function(){if(!finished){btn.textContent=old;btn.disabled=false;}},12000);
-   }catch(e){btn.textContent=old;btn.disabled=false;alert("Le téléchargement n’a pas pu démarrer. Recharge la page puis réessaie.");}
+   var btn=this, old=btn.textContent;
+   btn.textContent="OUVERTURE…";
+   setTimeout(function(){
+     btn.textContent=old;
+     window.print();
+   },80);
  });
  <\/script></body></html>`;
  const w=window.open("","_blank");
