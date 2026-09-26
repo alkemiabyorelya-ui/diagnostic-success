@@ -13,6 +13,20 @@ const dimensions=[
 {key:"creativite",label:"CRÉATIVITÉ",sign:"Poissons",questions:["Je me donne la permission de suivre une idée créative même lorsqu'elle ne correspond pas à ce qui se fait habituellement dans mon secteur.","Mon entreprise possède un univers, une atmosphère ou une identité que l'on peut reconnaître au-delà de mes offres.","Je sais transformer une inspiration ou une idée abstraite en quelque chose de concret que je peux proposer à mon audience.","Je laisse suffisamment d'espace dans mon activité pour créer plutôt que d'être constamment dans l'exécution.","Je fais confiance à mon imagination pour inventer de nouvelles offres, expériences ou façons de transmettre."],result:{title:"Est-ce que tu crées encore… ou est-ce que tu passes ton temps à regarder ce qui fonctionne chez les autres ?",body:"À force de chercher les bonnes pratiques, les tendances, les formats qui performent et ce que l’algorithme préfère… on peut finir avec un business parfaitement optimisé. Et complètement sans âme.",behind:"Peur que ses idées ne fonctionnent pas, comparaison, besoin de validation extérieure, difficulté à donner de la valeur à ce qui vient naturellement.",liberated:"Tu recommences à inventer. Tes offres, ton univers et ta façon de transmettre deviennent plus reconnaissables parce qu’ils viennent réellement de toi."}}
 ];
 
+const tieBreakCopy={
+ audace:"Je sais ce que je devrais faire, mais je repousse encore le moment d’y aller.",
+ prosperite:"Je veux gagner davantage, mais assumer mes prix ou recevoir plus reste inconfortable.",
+ communication:"J’ai des choses à dire, mais je peine encore à les exprimer simplement et avec ma propre voix.",
+ intuition:"J’écoute tellement les conseils extérieurs que j’ai parfois du mal à savoir ce qui est juste pour moi.",
+ visibilite:"Je sais que je devrais davantage me montrer, mais je continue à me retenir.",
+ expertise:"Je continue à chercher à être encore plus compétente avant d’assumer pleinement mon expertise.",
+ relation:"Je m’adapte encore trop pour préserver la relation, même quand ça me coûte.",
+ puissance:"Une partie de moi veut plus grand, mais ce que cette réussite implique me fait encore freiner.",
+ vision:"Je veux faire grandir mon business, mais je manque encore d’une direction vraiment grande et claire.",
+ leadership:"Je passe encore beaucoup trop de temps à exécuter au lieu de réellement diriger mon entreprise.",
+ impact:"Je veux créer plus d’impact, mais je n’assume pas encore complètement ce qui rend ma vision différente.",
+ creativite:"Je regarde encore trop ce qui fonctionne ailleurs au lieu de faire pleinement confiance à mes propres idées."
+};
 let i=0; const responses={}; let lead={};
 
 const leadForm=document.getElementById("lead-form");
@@ -61,73 +75,46 @@ function calcScores(){
 }
 
 async function finish(){
- const scores=calcScores(); quiz.classList.add("hidden");
- const sorted=[...dimensions].sort((a,b)=>scores[a.key]-scores[b.key]); const top3=sorted.slice(0,3);
- const fd=new URLSearchParams();
- fd.append("form-name","diagnostic-results"); fd.append("prenom",lead.prenom); fd.append("email",lead.email);
- dimensions.forEach(d=>fd.append("score_"+d.key,String(scores[d.key])));
- fd.append("priorite_1",top3[0].label); fd.append("priorite_2",top3[1].label); fd.append("priorite_3",top3[2].label);
- await fetch("/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:fd.toString()}).catch(()=>{});
- renderResults(scores,top3); window.scrollTo({top:0,behavior:"smooth"});
+ const scores=calcScores();
+ const sorted=[...dimensions].sort((a,b)=>scores[a.key]-scores[b.key]);
+ const cutoff=scores[sorted[2].key];
+ const locked=sorted.filter(d=>scores[d.key]<cutoff);
+ const tied=sorted.filter(d=>scores[d.key]===cutoff);
+ const slots=3-locked.length;
+ if(tied.length>slots){renderTieBreak(scores,locked,tied,slots);return;}
+ await finalizeResults(scores,[...locked,...tied.slice(0,slots)]);
 }
-
+function renderTieBreak(scores,locked,tied,slots){
+ document.getElementById("progress-label").textContent="Dernière étape";
+ document.getElementById("progress-bar").style.width="100%";
+ document.getElementById("dimension-label").textContent="OK, LÀ C’EST SERRÉ 😅";
+ document.getElementById("question-text").textContent=slots===1?"Laquelle de ces situations te coûte le plus aujourd’hui dans ton business ?":"Lesquelles de ces situations te coûtent le plus aujourd’hui dans ton business ?";
+ document.querySelector(".quiz-help").textContent=slots===1?"Choisis celle qui te parle le plus.":`Choisis les ${slots} qui te parlent le plus.`;
+ const box=document.getElementById("answers");box.innerHTML="";const chosen=new Set();
+ const next=document.getElementById("next-dimension");next.textContent="VOIR MES RÉSULTATS →";next.disabled=true;
+ tied.forEach(d=>{const label=document.createElement("label");label.className="check-answer tie-answer";const input=document.createElement("input");input.type="checkbox";input.value=d.key;const mark=document.createElement("span");mark.className="check-mark";mark.textContent="✓";const wrap=document.createElement("span");wrap.className="check-text";wrap.innerHTML=`<strong>${d.label}</strong><span>${tieBreakCopy[d.key]}</span>`;input.addEventListener("change",()=>{if(input.checked&&chosen.size>=slots){input.checked=false;return;}if(input.checked)chosen.add(d.key);else chosen.delete(d.key);label.classList.toggle("is-selected",input.checked);next.disabled=chosen.size!==slots;});label.append(input,mark,wrap);box.appendChild(label);});
+ next.onclick=()=>finalizeResults(scores,[...locked,...tied.filter(d=>chosen.has(d.key))]);
+ quiz.classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"});
+}
+async function finalizeResults(scores,top3){
+ quiz.classList.add("hidden");const fd=new URLSearchParams();fd.append("form-name","diagnostic-results");fd.append("prenom",lead.prenom);fd.append("email",lead.email);dimensions.forEach(d=>fd.append("score_"+d.key,String(scores[d.key])));fd.append("priorite_1",top3[0].label);fd.append("priorite_2",top3[1].label);fd.append("priorite_3",top3[2].label);await fetch("/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:fd.toString()}).catch(()=>{});renderResults(scores,top3);window.scrollTo({top:0,behavior:"smooth"});
+}
 function renderResults(scores,top3){
- results.classList.remove("hidden");
+ results.classList.remove("hidden");const priorityNames=top3.map(d=>d.label).join(" · ");
  results.innerHTML=`
- <div class="results-head"><div class="eyebrow">TES RÉSULTATS</div><h1>TU VOIS LE PROBLÈME MAINTENANT ?</h1>
- <p><strong>Tu n’as jamais manqué de stratégie.</strong></p>
- <p>Tu savais déjà qu’il fallait te montrer, vendre, parler de ton offre, assumer tes prix, prendre des décisions et arrêter de jouer petit. Le problème, c’est que savoir quoi faire n’a jamais suffi à être capable de le faire.</p></div>
- <div class="scores-grid">${dimensions.map(d=>`<div class="score-card ${top3.some(p=>p.key===d.key)?"score-card--priority":""}"><span>${d.label}</span><strong>${scores[d.key]} %</strong>${top3.some(p=>p.key===d.key)?'<em>À travailler en priorité</em>':""}</div>`).join("")}</div>
+ <div class="results-head"><div class="eyebrow">TES RÉSULTATS</div><h1>TU VOIS LE PROBLÈME MAINTENANT ?</h1><p><strong>Tu n’as jamais manqué de stratégie.</strong></p><p>Tu savais déjà qu’il fallait te montrer, vendre, parler de ton offre, assumer tes prix, prendre des décisions et arrêter de jouer petit. Le problème, c’est que savoir quoi faire n’a jamais suffi à être capable de le faire.</p></div>
+ <div class="scores-grid">${dimensions.map(d=>`<div class="score-card ${top3.some(p=>p.key===d.key)?"score-card--priority":""}"><span>${d.label}</span><strong>${scores[d.key]} %</strong>${top3.some(p=>p.key===d.key)?'<em>PRIORITÉ</em>':""}</div>`).join("")}</div>
  <h2>VOICI LES 3 ENDROITS OÙ TON BUSINESS TE DEMANDE AUJOURD’HUI DE SHIFTER.</h2>
- <div class="priority-list">${top3.map((d,idx)=>`<article class="result-card"><div class="score-badge">#${idx+1} — ${d.label} · ${scores[d.key]} %</div><h3>${d.result.title}</h3><p>${d.result.body}</p><h4>Ce qui peut se jouer derrière</h4><p>${d.result.behind}</p><h4>Quand cette dimension se libère</h4><p>${d.result.liberated}</p></article>`).join("")}</div>
- <section class="about-aurelia">
-   <div class="about-top">
-     <div class="about-photo"><img src="/1000062207.png" alt="Aurélia, fondatrice d’ALKÉMIA"></div>
-     <div class="about-copy about-copy--top">
-       <div class="eyebrow">JE SUIS AURÉLIA</div>
-       <h2>Et si on construisait les business complètement à l’envers ?</h2>
-       <p>Quand on crée son entreprise, le premier réflexe, c’est souvent de prendre une formation business. On apprend à construire une offre, définir une stratégie, communiquer, vendre, créer du contenu…</p>
-       <p><strong>Mais on oublie généralement de commencer par la base : devenir l’entrepreneure capable de porter tout ça.</strong></p>
-     </div>
-   </div>
-   <div class="about-copy about-copy--full">
-     <p>Alors on essaie d’appliquer des stratégies avec une identité qui, elle, n’est pas encore à l’aise avec le fait de se montrer, vendre, recevoir davantage d’argent, prendre des décisions, poser des limites ou voir beaucoup plus grand.</p>
-     <p>Et forcément, ça pousse. Ça force. On essaie de faire rentrer la stratégie dans une identité qui n’est pas encore prête à la soutenir.</p>
-     <p><strong>Pour moi, l’ordre devrait être exactement l’inverse.</strong></p>
-     <p>On travaille d’abord sur ton identité d’entrepreneure : ce que tu t’autorises à faire, à recevoir, à montrer, à assumer et à devenir. Et ensuite, la stratégie arrête d’être quelque chose que tu dois te forcer à appliquer. Elle devient beaucoup plus naturelle, fluide et cohérente avec qui tu es.</p>
-     <p>C’est précisément pour ça que j’ai créé ALKÉMIA et que je travaille aujourd’hui sur la <strong>reprogrammation neuro-identitaire</strong>.</p>
-   </div>
- </section>
- <section class="offers-transition">
-   <div class="eyebrow">ET MAINTENANT ?</div>
-   <h2>OK. ET MAINTENANT, TU FAIS QUOI DE TES RÉSULTATS ?</h2>
-   <p>Ton diagnostic vient de te montrer <strong>où ton identité d’entrepreneure soutient déjà ton business… et où elle lui met encore le pied sur le frein.</strong></p>
-   <p>Maintenant, l’idée n’est évidemment pas de refermer cette page en te disant : « Ah oui, effectivement, j’ai un problème avec ma visibilité. » 😅</p>
-   <p><strong>L’idée, c’est de travailler dessus.</strong></p>
-   <p>Et selon ce que tu veux transformer aujourd’hui, je peux t’accompagner de trois façons différentes.</p>
- </section>
- <div class="offers">
-   <article class="offer-card primary"><div class="offer-for">TON IDENTITÉ D’ENTREPRENEURE FREINE ENCORE TON BUSINESS À CERTAINS ENDROITS</div><div class="eyebrow">SUCCESS</div><h2>Ton business ne pourra pas aller plus loin que l’identité avec laquelle tu essaies de le construire.</h2><p>SUCCESS est un accompagnement de groupe entièrement consacré à <strong>ton identité entrepreneuriale</strong>, qui ouvrira prochainement ses portes. Tu peux t’inscrire dès maintenant sur la liste prioritaire.</p><button id="success-btn">JE M’INSCRIS SUR LA LISTE PRIORITAIRE SUCCESS →</button></article>
-   <article class="offer-card"><div class="offer-for">POUR COMMENCER À TON RYTHME, EN AUTONOMIE</div><div class="eyebrow">LES CODES D’ALKÉMIA</div><h3>Tu veux commencer seule sur une énergie précise ?</h3><p>Tu peux commencer à travailler directement sur l’énergie zodiacale qui correspond à ce que ton diagnostic vient de mettre en lumière.</p><a class="cta" href="https://lescodesdalkemia.netlify.app/" target="_blank" rel="noopener">DÉCOUVRIR LES CODES D’ALKÉMIA →</a></article>
-   <article class="offer-card"><div class="offer-for">POUR ALLER PLUS LOIN QUE TON BUSINESS</div><div class="eyebrow">ORIGINE</div><h3>Tu sens que ce qui se joue dépasse largement ton business ?</h3><p>ORIGINE est mon accompagnement individuel pour aller travailler en profondeur sur tes programmes inconscients, à partir de ta propre carte du ciel. Ici, on travaille sur toi à 360°.</p><a class="cta" href="https://alkemia.netlify.app/origine" target="_blank" rel="noopener">DÉCOUVRIR ORIGINE →</a></article>
- </div>
- <section class="download-report">
-   <div class="eyebrow">GARDE TES RÉSULTATS</div>
-   <h2>Tu veux pouvoir revenir dessus tranquillement ?</h2>
-   <p>Je t’ai préparé une version de ton diagnostic à conserver : tes <strong>12 scores</strong>, tes <strong>3 priorités</strong> et les pistes qui peuvent se jouer derrière chacune d’elles.</p>
-   <button id="download-report-btn" type="button">↓ TÉLÉCHARGER MON RAPPORT PERSONNALISÉ</button>
- </section>
-
- <div class="result-social-links">
-   <a href="https://www.instagram.com/alkemia.by.orelya/" target="_blank" rel="noopener">Instagram · @alkemia.by.orelya</a>
-   <span>·</span>
-   <a href="https://alkemia.netlify.app/" target="_blank" rel="noopener">alkemia.netlify.app</a>
- </div>
-`;
- document.getElementById("success-btn").addEventListener("click",joinSuccess);
- document.getElementById("download-report-btn").addEventListener("click",()=>openPrintableReport(scores,top3));
+ <div class="priority-list">${top3.map((d,idx)=>`<article class="result-card result-card--premium"><div class="score-badge">PRIORITÉ #${idx+1} · ${d.label} · ${scores[d.key]} %</div><h3>${d.result.title}</h3><p>${d.result.body}</p><div class="result-insight"><h4>CE QUI PEUT TE FREINER</h4><p>${d.result.behind}</p><h4>QUAND ÇA SE DÉBLOQUE</h4><p>${d.result.liberated}</p></div></article>`).join("")}</div>
+ <section class="priority-reveal"><div class="eyebrow">CHEZ TOI, LES 3 PRIORITÉS SONT</div><h2>${top3.map(d=>d.label).join("<br>")}</h2><p>Imagine maintenant ce qui pourrait changer dans ton business si tu arrêtais de te retenir précisément à ces trois endroits.</p><h3>Pas dans six mois. <span>Maintenant.</span></h3></section>
+ <section class="about-aurelia about-aurelia--new"><div class="about-top"><div class="about-photo"><img src="/1000062207.png" alt="Aurélia, fondatrice d’ALKÉMIA"></div><div class="about-copy about-copy--top"><div class="eyebrow">JE SUIS AURÉLIA</div><h2>JE NE T’APPRENDS PAS À FAIRE PLUS.</h2><p class="about-punch"><strong>Je travaille sur ce qui t’empêche encore de le faire.</strong></p></div></div><div class="about-copy about-copy--full"><p>Je suis experte en Reprogrammation Neuro-Identitaire et fondatrice de la méthode ALKÉMIA. Mon travail commence précisément <strong>là où les stratégies business s’arrêtent.</strong></p><p>Parce qu’entre savoir que tu devrais prendre ta place, vendre, te montrer, augmenter tes prix ou voir plus grand… et être réellement capable de le faire sans te battre constamment contre toi-même, il peut y avoir un monde.</p><p><strong>C’est ce monde-là que je viens travailler.</strong></p></div></section>
+ <section class="offers-transition offers-transition--new"><div class="eyebrow">TU SAIS OÙ ÇA BLOQUE</div><h2>MAINTENANT,<br>ON VA LE SHIFTER.</h2></section>
+ <div class="offers offers--new"><article class="offer-card primary success-card"><div class="eyebrow">SUCCESS · PROCHAINEMENT</div><h2>Ton business ne pourra pas aller plus loin que l’identité avec laquelle tu essaies de le construire.</h2><p>Tu n’as probablement pas besoin d’une nouvelle formation business. Ni d’une énième stratégie à essayer d’appliquer parfaitement.</p><p><strong>Tu as besoin que l’entrepreneure qui doit porter tout ça soit capable d’assumer le niveau de business qu’elle veut réellement créer.</strong></p><p class="success-rhythm">Prendre sa place. Être visible. Recevoir davantage. Décider. Vendre. Poser ses limites. Voir beaucoup plus grand.</p><p>SUCCESS est mon prochain accompagnement de groupe entièrement consacré à <strong>ton identité entrepreneuriale.</strong></p><p>Et les endroits que ton diagnostic vient de faire ressortir — <strong>${priorityNames}</strong> — c’est précisément là-dessus qu’on va travailler.</p><div class="success-promise">Pas pour que tu saches encore mieux ce que tu devrais faire.<br><strong>Pour que tu deviennes capable de le faire.</strong></div><button id="success-btn">JE VEUX ÊTRE PRIORITAIRE POUR SUCCESS →</button><small>SUCCESS ouvrira prochainement ses portes. La liste prioritaire sera informée en premier.</small></article>
+ <div class="secondary-offers"><article class="offer-card"><div class="eyebrow">TU VEUX COMMENCER SEULE ?</div><h3>LES CODES D’ALKÉMIA</h3><p>Travaille en autonomie sur une énergie précise que ton diagnostic vient de mettre en lumière.</p><a class="cta" href="https://lescodesdalkemia.netlify.app/" target="_blank" rel="noopener">DÉCOUVRIR LES CODES →</a></article><article class="offer-card"><div class="eyebrow">ÇA DÉPASSE TON BUSINESS ?</div><h3>ORIGINE</h3><p>Parce que parfois, ce que ton business vient réveiller ne commence absolument pas dans ton business. ORIGINE permet d’aller travailler en profondeur sur tes programmes inconscients, à partir de ta propre carte du ciel.</p><a class="cta" href="https://alkemia.netlify.app/origine" target="_blank" rel="noopener">DÉCOUVRIR ORIGINE →</a></article></div></div>
+ <section class="download-report download-report--new"><div class="eyebrow">GARDE TES RÉSULTATS</div><h2>Ton diagnostic ne s’arrête pas à cette page.</h2><p>Télécharge ton rapport personnalisé avec tes <strong>12 scores</strong>, tes <strong>3 priorités</strong> et les pistes qui peuvent se jouer derrière chacune d’elles.</p><button id="download-report-btn" type="button">↓ TÉLÉCHARGER MON RAPPORT PERSONNALISÉ</button></section>
+ <div class="result-social-links result-social-links--full"><a href="https://www.instagram.com/alkemia.by.orelya/" target="_blank" rel="noopener">https://www.instagram.com/alkemia.by.orelya/</a><a href="https://alkemia.netlify.app/" target="_blank" rel="noopener">https://alkemia.netlify.app/</a></div>`;
+ document.getElementById("success-btn").addEventListener("click",joinSuccess);document.getElementById("download-report-btn").addEventListener("click",()=>openPrintableReport(scores,top3));
 }
-
 async function joinSuccess(){
  const fd=new URLSearchParams(); fd.append("form-name","success-priority"); fd.append("prenom",lead.prenom); fd.append("email",lead.email); fd.append("interet_success","oui");
  await fetch("/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:fd.toString()});
@@ -220,16 +207,22 @@ function openPrintableReport(scores,top3){
      );
    });
    content.push(
-     {text:"ET MAINTENANT ?",style:"kicker",pageBreak:"before"},
-     {text:"Tu sais où ça bloque. Maintenant, tu peux travailler dessus.",style:"sectionTitle",margin:[0,5,0,20]},
-     {text:"SUCCESS",style:"offerTitle"},{text:"Un accompagnement de groupe entièrement consacré à ton identité entrepreneuriale, qui ouvrira prochainement ses portes.",style:"body"},
-     {text:"Revenir au diagnostic et rejoindre la liste prioritaire →",link:"https://diagnostic-success.netlify.app/",style:"link",margin:[0,4,0,18]},
-     {text:"LES CODES D’ALKÉMIA",style:"offerTitle"},{text:"Pour commencer à ton rythme, en autonomie, sur une énergie précise.",style:"body"},
-     {text:"Découvrir les Codes d’ALKÉMIA →",link:"https://lescodesdalkemia.netlify.app/",style:"link",margin:[0,4,0,18]},
-     {text:"ORIGINE",style:"offerTitle"},{text:"Pour aller plus loin que ton business et travailler en profondeur sur tes programmes inconscients.",style:"body"},
-     {text:"Découvrir ORIGINE →",link:"https://alkemia.netlify.app/origine",style:"link",margin:[0,4,0,28]},
-     {text:"Aurélia · Experte en Reprogrammation Neuro-Identitaire · Fondatrice de la méthode ALKÉMIA",style:"footer",margin:[0,0,0,8]},
-     {text:[{text:"Instagram : @alkemia.by.orelya",link:"https://www.instagram.com/alkemia.by.orelya/"},{text:"   ·   "},{text:"Site : alkemia.netlify.app",link:"https://alkemia.netlify.app/"}],style:"socials"}
+     {text:"TU SAIS MAINTENANT OÙ ÇA BLOQUE.",style:"kicker",pageBreak:"before"},
+     {text:"Mais le savoir ne va pas le shifter.",style:"sectionTitle",margin:[0,5,0,12]},
+     {text:"Tu peux refermer ce rapport et retourner chercher une meilleure stratégie. Ou décider de travailler précisément sur ce que ton diagnostic vient de mettre en lumière.",style:"body",margin:[0,0,0,18]},
+     {text:"TES 3 PRIORITÉS : "+priorities.map(function(p){return p.label;}).join(" · "),style:"subhead",margin:[0,0,0,8]},
+     {text:"Imagine ce qui pourrait changer dans ton business si tu arrêtais de freiner précisément à ces trois endroits.",style:"body",margin:[0,0,0,26]},
+     {text:"SUCCESS",style:"offerTitle"},
+     {text:"Et si ton prochain niveau de business ne demandait pas une meilleure stratégie… mais une nouvelle version de toi pour la porter ?",style:"priorityTitle",margin:[0,4,0,14]},
+     {text:"SUCCESS est mon prochain accompagnement de groupe consacré à ton identité entrepreneuriale. On ne va pas passer des semaines à t’expliquer ce que tu devrais faire dans ton business. Tu le sais probablement déjà. On va travailler sur ce qui t’empêche encore de le faire, de l’assumer, de le recevoir ou de le soutenir pleinement.",style:"body"},
+     {text:"JE VEUX ÊTRE PRIORITAIRE POUR SUCCESS →",link:"https://diagnostic-success.netlify.app/",style:"link",margin:[0,8,0,22]},
+     {text:"Commencer seule → Les Codes d’ALKÉMIA",link:"https://lescodesdalkemia.netlify.app/",style:"link",margin:[0,0,0,8]},
+     {text:"Aller plus loin → ORIGINE",link:"https://alkemia.netlify.app/origine",style:"link",margin:[0,0,0,28]},
+     {text:"Aurélia · Experte en Reprogrammation Neuro-Identitaire · Fondatrice de la méthode ALKÉMIA",style:"footer",margin:[0,0,0,10]},
+     {text:"Instagram",style:"footer",margin:[0,0,0,2]},
+     {text:"https://www.instagram.com/alkemia.by.orelya/",link:"https://www.instagram.com/alkemia.by.orelya/",style:"socials",margin:[0,0,0,8]},
+     {text:"Site internet",style:"footer",margin:[0,0,0,2]},
+     {text:"https://alkemia.netlify.app/",link:"https://alkemia.netlify.app/",style:"socials"}
    );
    var doc={
      pageSize:"A4",pageMargins:[40,45,40,45],
