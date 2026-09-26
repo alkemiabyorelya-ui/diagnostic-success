@@ -189,13 +189,13 @@ function openPrintableReport(scores,top3){
    var rows=[]; for(var i=0;i<scoreCells.length;i+=3) rows.push(scoreCells.slice(i,i+3));
    var content=[
      {text:"ALKÉMIA",style:"coverBrand",margin:[0,20,0,95]},
-     {text:"TON DIAGNOSTIC\nBUSINESS",style:"coverTitle"},
+     {text:"TON DIAGNOSTIC\\nBUSINESS",style:"coverTitle"},
      {text:"Les 3 endroits où ton identité d’entrepreneure te demande aujourd’hui de shifter.",style:"coverSub",margin:[0,18,0,32]},
      {canvas:[{type:"line",x1:0,y1:0,x2:115,y2:0,lineWidth:3,lineColor:"#D58CA4"}],margin:[0,0,0,24]},
      {text:(lead.prenom||"")+" · RAPPORT PERSONNALISÉ",style:"kicker"},
      {text:"12 dimensions. 3 priorités. Un point de départ très clair.",style:"intro",margin:[0,8,0,0]},
 
-     {text:"TON BUSINESS\nAUJOURD’HUI",style:"sectionTitle",pageBreak:"before"},
+     {text:"TON BUSINESS\\nAUJOURD’HUI",style:"sectionTitle",pageBreak:"before"},
      {text:"Tes 12 dimensions",style:"sectionSub",margin:[0,8,0,26]},
      {table:{widths:["*","*","*"],body:rows},layout:{hLineColor:function(){return "#4A3038";},vLineColor:function(){return "#4A3038";},paddingLeft:function(){return 3;},paddingRight:function(){return 3;},paddingTop:function(){return 3;},paddingBottom:function(){return 3;}}}
    ];
@@ -215,7 +215,7 @@ function openPrintableReport(scores,top3){
      );
    });
    content.push(
-     {text:"TU SAIS MAINTENANT\nOÙ ÇA BLOQUE.",style:"sectionTitle",pageBreak:"before"},
+     {text:"TU SAIS MAINTENANT\\nOÙ ÇA BLOQUE.",style:"sectionTitle",pageBreak:"before"},
      {text:"Mais le savoir ne va pas le shifter.",style:"sectionSubHot",margin:[0,10,0,22]},
      {text:"Tu peux refermer ce rapport et retourner chercher une meilleure stratégie. Ou décider de travailler précisément sur ce que ton diagnostic vient de mettre en lumière.",style:"bodyLarge",margin:[0,0,0,28]},
      {text:"TES 3 PRIORITÉS",style:"kicker"},
@@ -228,13 +228,13 @@ function openPrintableReport(scores,top3){
      {text:"SUCCESS est mon prochain accompagnement de groupe consacré à ton identité entrepreneuriale.",style:"bodyLarge",margin:[0,0,0,16]},
      {text:"On ne va pas passer des semaines à t’expliquer ce que tu devrais faire dans ton business. Tu le sais probablement déjà.",style:"bodyLarge",margin:[0,0,0,16]},
      {text:"On va travailler sur ce qui t’empêche encore de le faire, de l’assumer, de le recevoir ou de le soutenir pleinement.",style:"bodyLarge",margin:[0,0,0,28]},
-     {table:{widths:["*"],body:[[{text:"PAS POUR QUE TU SACHES ENCORE MIEUX CE QUE TU DEVRAIS FAIRE.\n\nPOUR QUE TU DEVIENNES CAPABLE DE LE FAIRE.",style:"successPromise",fillColor:"#D58CA4",margin:[20,18,20,18]}]]},layout:"noBorders",margin:[0,0,0,26]},
+     {table:{widths:["*"],body:[[{text:"PAS POUR QUE TU SACHES ENCORE MIEUX CE QUE TU DEVRAIS FAIRE.\\n\\nPOUR QUE TU DEVIENNES CAPABLE DE LE FAIRE.",style:"successPromise",fillColor:"#D58CA4",margin:[20,18,20,18]}]]},layout:"noBorders",margin:[0,0,0,26]},
      {text:"JE VEUX ÊTRE PRIORITAIRE POUR SUCCESS →",link:"https://diagnostic-success.netlify.app/",style:"ctaPdf",margin:[0,0,0,30]},
      {text:"Commencer seule → Les Codes d’ALKÉMIA",link:"https://lescodesdalkemia.netlify.app/",style:"secondaryLink",margin:[0,0,0,9]},
      {text:"Aller plus loin → ORIGINE",link:"https://alkemia.netlify.app/origine",style:"secondaryLink",margin:[0,0,0,36]},
      {canvas:[{type:"line",x1:0,y1:0,x2:515,y2:0,lineWidth:1,lineColor:"#4A3038"}],margin:[0,0,0,22]},
      {text:"AURÉLIA",style:"signature"},
-     {text:"Experte en Reprogrammation Neuro-Identitaire\nFondatrice de la méthode ALKÉMIA",style:"contact",margin:[0,5,0,18]},
+     {text:"Experte en Reprogrammation Neuro-Identitaire\\nFondatrice de la méthode ALKÉMIA",style:"contact",margin:[0,5,0,18]},
      {text:"Instagram",style:"contactLabel"},{text:"https://www.instagram.com/alkemia.by.orelya/",link:"https://www.instagram.com/alkemia.by.orelya/",style:"contactLink",margin:[0,3,0,10]},
      {text:"Site internet",style:"contactLabel"},{text:"https://alkemia.netlify.app/",link:"https://alkemia.netlify.app/",style:"contactLink"}
    );
