@@ -360,3 +360,9 @@ html body main .about-aurelia p{max-width:820px!important}
 /* v11 — contraste priorité absolu */
 .scores-grid .score-card.score-card--priority{background:#e2a9b8!important;background-image:none!important;border:2px solid #f7dce4!important}
 .scores-grid .score-card.score-card--priority span,.scores-grid .score-card.score-card--priority strong{color:#120b0e!important}
+
+/* v12 — aucun libellé ne dépasse sur mobile */
+.score-card span{overflow-wrap:anywhere;word-break:break-word;hyphens:auto;max-width:100%}
+@media(max-width:700px){
+ .scores-grid .score-card span{font-size:.62rem!important;letter-spacing:.035em!important;line-height:1.15!important}
+}

@@ -280,14 +280,10 @@ function openPrintableReport(scores,top3){
    };
    try{
      var pdf=pdfMake.createPdf(doc);
-     pdf.getBlob(function(blob){
-       var url=URL.createObjectURL(blob);
-       var a=document.createElement("a");
-       a.href=url;a.download="diagnostic-alkemia.pdf";
-       document.body.appendChild(a);a.click();a.remove();
-       setTimeout(function(){URL.revokeObjectURL(url);},3000);
-       btn.textContent=old;btn.disabled=false;
-     });
+     var finished=false;
+     var reset=function(){if(finished)return;finished=true;btn.textContent=old;btn.disabled=false;};
+     pdf.download("diagnostic-alkemia.pdf",reset);
+     setTimeout(function(){if(!finished){btn.textContent=old;btn.disabled=false;}},12000);
    }catch(e){btn.textContent=old;btn.disabled=false;alert("Le téléchargement n’a pas pu démarrer. Recharge la page puis réessaie.");}
  });
  <\/script></body></html>`;
