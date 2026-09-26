@@ -103,7 +103,7 @@ function renderResults(scores,top3){
  results.classList.remove("hidden");const priorityNames=top3.map(d=>d.label).join(" · ");
  results.innerHTML=`
  <div class="results-head"><div class="eyebrow">TES RÉSULTATS</div><h1>TU VOIS LE PROBLÈME MAINTENANT ?</h1><p><strong>Tu n’as jamais manqué de stratégie.</strong></p><p>Tu savais déjà qu’il fallait te montrer, vendre, parler de ton offre, assumer tes prix, prendre des décisions et arrêter de jouer petit. Le problème, c’est que savoir quoi faire n’a jamais suffi à être capable de le faire.</p></div>
- <div class="scores-grid">${dimensions.map(d=>`<div class="score-card ${top3.some(p=>p.key===d.key)?"score-card--priority":""}"><span>${d.label}</span><strong>${scores[d.key]} %</strong>${top3.some(p=>p.key===d.key)?'<em>PRIORITÉ</em>':""}</div>`).join("")}</div>
+ <div class="scores-grid">${dimensions.map(d=>`<div class="score-card ${top3.some(p=>p.key===d.key)?"score-card--priority":""}" ${top3.some(p=>p.key===d.key)?'style="background:#e2a9b8!important;border:2px solid #f7dce4!important;box-shadow:0 12px 34px rgba(226,169,184,.38)!important"':""}><span ${top3.some(p=>p.key===d.key)?'style="color:#120b0e!important"':""}>${d.label}</span><strong ${top3.some(p=>p.key===d.key)?'style="color:#120b0e!important"':""}>${scores[d.key]} %</strong>${top3.some(p=>p.key===d.key)?'<em style="background:#120b0e!important;color:#f9e8ed!important">PRIORITÉ</em>':""}</div>`).join("")}</div>
  <h2>VOICI LES 3 ENDROITS OÙ TON BUSINESS TE DEMANDE AUJOURD’HUI DE SHIFTER.</h2>
  <div class="priority-list">${top3.map((d,idx)=>`<article class="result-card result-card--premium"><div class="score-badge">PRIORITÉ #${idx+1} · ${d.label} · ${scores[d.key]} %</div><h3>${d.result.title}</h3><p>${d.result.body}</p><div class="result-insight"><h4>CE QUI PEUT TE FREINER</h4><p>${d.result.behind}</p><h4>QUAND ÇA SE DÉBLOQUE</h4><p>${d.result.liberated}</p></div></article>`).join("")}</div>
  <section class="priority-reveal"><div class="eyebrow">CHEZ TOI, LES 3 PRIORITÉS SONT</div><h2>${top3.map(d=>d.label).join("<br>")}</h2><p>Imagine maintenant ce qui pourrait changer dans ton business si tu arrêtais de te retenir précisément à ces trois endroits.</p><h3>Pas dans six mois. <span>Maintenant.</span></h3></section>
@@ -241,7 +241,7 @@ function openPrintableReport(scores,top3){
    var doc={
      pageSize:"A4",pageMargins:[40,46,40,46],
      background:function(){return {canvas:[{type:"rect",x:0,y:0,w:595.28,h:841.89,color:"#0A0909"}]};},
-     footer:function(currentPage,pageCount){return {columns:[{text:"ALKÉMIA",style:"footerBrand"},{text:String(currentPage).padStart(2,"0")+" / "+String(pageCount).padStart(2,"0"),style:"pageNo",alignment:"right"}],margin:[40,0,40,22]};},
+     footer:function(currentPage,pageCount){return {columns:[{text:"ALKÉMIA",style:"footerBrand"},{text:(currentPage<10?"0":"")+currentPage+" / "+(pageCount<10?"0":"")+pageCount,style:"pageNo",alignment:"right"}],margin:[40,0,40,22]};},
      defaultStyle:{font:"Roboto",fontSize:10.5,color:"#D7C7CB",lineHeight:1.35},
      styles:{
        coverBrand:{fontSize:11,bold:true,color:"#D58CA4",characterSpacing:4},

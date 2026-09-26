@@ -356,3 +356,7 @@ html body main .about-aurelia p{max-width:820px!important}
 .score-card--priority{background:#d58ca4!important;border:2px solid #ffd7e3!important;box-shadow:0 14px 38px rgba(213,140,164,.32)!important}
 .score-card--priority span,.score-card--priority strong{color:#130b0e!important}
 .score-card--priority em{display:inline-block!important;background:#160d11!important;color:#f8e4ea!important;border-radius:999px!important;padding:5px 9px!important;margin-top:8px!important;font-style:normal!important;font-weight:800!important;letter-spacing:.1em!important}
+
+/* v11 — contraste priorité absolu */
+.scores-grid .score-card.score-card--priority{background:#e2a9b8!important;background-image:none!important;border:2px solid #f7dce4!important}
+.scores-grid .score-card.score-card--priority span,.scores-grid .score-card.score-card--priority strong{color:#120b0e!important}
