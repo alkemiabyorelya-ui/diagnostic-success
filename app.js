@@ -13,9 +13,7 @@ const dimensions=[
 {key:"creativite",label:"CRÉATIVITÉ",sign:"Poissons",questions:["Je me donne la permission de suivre une idée créative même lorsqu'elle ne correspond pas à ce qui se fait habituellement dans mon secteur.","Mon entreprise possède un univers, une atmosphère ou une identité que l'on peut reconnaître au-delà de mes offres.","Je sais transformer une inspiration ou une idée abstraite en quelque chose de concret que je peux proposer à mon audience.","Je laisse suffisamment d'espace dans mon activité pour créer plutôt que d'être constamment dans l'exécution.","Je fais confiance à mon imagination pour inventer de nouvelles offres, expériences ou façons de transmettre."],result:{title:"Est-ce que tu crées encore… ou est-ce que tu passes ton temps à regarder ce qui fonctionne chez les autres ?",body:"À force de chercher les bonnes pratiques, les tendances, les formats qui performent et ce que l’algorithme préfère… on peut finir avec un business parfaitement optimisé. Et complètement sans âme.",behind:"Peur que ses idées ne fonctionnent pas, comparaison, besoin de validation extérieure, difficulté à donner de la valeur à ce qui vient naturellement.",liberated:"Tu recommences à inventer. Tes offres, ton univers et ta façon de transmettre deviennent plus reconnaissables parce qu’ils viennent réellement de toi."}}
 ];
 
-const flat=dimensions.flatMap(d=>d.questions.map(q=>({d,q})));
-const answersScale=[["Pas du tout",1],["Plutôt non",2],["Mitigé",3],["Plutôt oui",4],["Complètement",5]];
-let i=0; const responses=[]; let lead={};
+let i=0; const responses={}; let lead={};
 
 const leadForm=document.getElementById("lead-form");
 const quiz=document.getElementById("quiz");
@@ -30,17 +28,35 @@ leadForm.addEventListener("submit",async e=>{
 });
 
 function renderQuestion(){
- const item=flat[i]; document.getElementById("progress-label").textContent=`Question ${i+1} sur ${flat.length}`;
- document.getElementById("progress-bar").style.width=`${(i/flat.length)*100}%`;
- document.getElementById("dimension-label").textContent=item.d.label;
- document.getElementById("question-text").textContent=item.q;
- const a=document.getElementById("answers"); a.innerHTML="";
- answersScale.forEach(([label,val])=>{const b=document.createElement("button");b.type="button";b.className="answer-btn";b.textContent=label;b.onclick=()=>{responses.push({key:item.d.key,value:val});i++; if(i<flat.length)renderQuestion(); else finish();};a.appendChild(b);});
+ const d=dimensions[i];
+ document.getElementById("progress-label").textContent=`Étape ${i+1} sur ${dimensions.length}`;
+ document.getElementById("progress-bar").style.width=`${((i+1)/dimensions.length)*100}%`;
+ document.getElementById("dimension-label").textContent=d.label;
+ document.getElementById("question-text").textContent="Coche toutes les affirmations qui te ressemblent aujourd’hui.";
+ const box=document.getElementById("answers"); box.innerHTML="";
+ const selected=new Set(responses[d.key]||[]);
+ d.questions.forEach((q,idx)=>{
+   const label=document.createElement("label"); label.className="check-answer";
+   const input=document.createElement("input"); input.type="checkbox"; input.value=String(idx); input.checked=selected.has(idx);
+   const mark=document.createElement("span"); mark.className="check-mark"; mark.textContent="✓";
+   const txt=document.createElement("span"); txt.className="check-text"; txt.textContent=q;
+   input.addEventListener("change",()=>{
+     const current=new Set(responses[d.key]||[]);
+     if(input.checked) current.add(idx); else current.delete(idx);
+     responses[d.key]=[...current];
+     label.classList.toggle("is-selected",input.checked);
+   });
+   if(input.checked) label.classList.add("is-selected");
+   label.append(input,mark,txt); box.appendChild(label);
+ });
+ const next=document.getElementById("next-dimension");
+ next.textContent=i===dimensions.length-1?"VOIR MES RÉSULTATS →":"SUIVANT →";
+ next.onclick=()=>{ if(!responses[d.key]) responses[d.key]=[]; i++; if(i<dimensions.length)renderQuestion(); else finish(); window.scrollTo({top:0,behavior:"smooth"}); };
 }
 
 function calcScores(){
  const out={};
- dimensions.forEach(d=>{const vals=responses.filter(r=>r.key===d.key).map(r=>r.value); const avg=vals.reduce((a,b)=>a+b,0)/vals.length; out[d.key]=Math.round(((avg-1)/4)*100);});
+ dimensions.forEach(d=>{out[d.key]=Math.round(((responses[d.key]||[]).length/d.questions.length)*100);});
  return out;
 }
 
